@@ -1,0 +1,486 @@
+/*
+********************************************************************************
+MASTER
+********************************************************************************
+Author: UnlikeCoder | unlikecoder.com
+Version: 1.0.0
+
+Content
+********************************************************************************
+1.     IMPORTS                                                                 1
+2.     GLOBALS                                                                 1
+2.1    LAYOUT                                                                  1
+2.2    TYPOGRPHY                                                               1
+3.     LAYOUT                                                                  1
+
+*/
+
+/* 1. IMPORTS *************************************************************** */
+/* Import needed fonts */
+@font-face {
+    font-family: 'Roboto';
+    src: url(../fonts/roboto/300.woff2) format('woff2'),
+        url(../fonts/roboto/300.woff) format('woff'),
+        url(../fonts/roboto/300.ttf) format('truetype');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url(../fonts/roboto/400.woff2) format('woff2'),
+        url(../fonts/roboto/400.woff) format('woff'),
+        url(../fonts/roboto/400.ttf) format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url(../fonts/roboto-slab/800.woff2) format('woff2'),
+        url(../fonts/roboto-slab/800.woff) format('woff'),
+        url(../fonts/roboto-slab/800.ttf) format('truetype');
+    font-weight: 800;
+}
+
+/* 2. GLOBALS *************************************************************** */
+* {
+    outline: none;
+}
+
+body {
+    font-family: 'Roboto', Verdana, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.25;
+}
+
+body.dark {
+    background-color: #222222;
+    color: #fafafa;
+}
+
+body.light {
+    background-color: #e1e1e1;
+    color: #222222;
+}
+
+/* 2.1 LAYOUT *************************************************************** */
+section,
+div,
+input {
+    box-sizing: border-box;
+}
+
+section {
+    padding: 0px 30px;
+}
+
+.content {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 2.2 TYPOGRAPHY *********************************************************** */
+h1,
+h2,
+h3 {
+    font-family: 'Roboto Slab', Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body h1 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+body h2 {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+body h3 {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+@media screen and (min-width: 768px) {
+    body {
+        font-size: 18px;
+    }
+
+    body h1 {
+        font-size: 30px;
+    }
+
+    body h2 {
+        font-size: 26px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    body h1 {
+        font-size: 52px;
+    }
+
+    body h2 {
+        font-size: 40px;
+    }
+}
+
+/* 2.3 FORMS **************************************************************** */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+label small {
+    margin-left: 15px;
+    font-size: 12px;
+    font-weight: 300;
+}
+
+body.light label small {
+    color: #111111 !important;
+}
+
+body.dark label small {
+    color: #f1f1f1;
+}
+
+body input,
+body select {
+    width: 100%;
+    height: 34px;
+    padding: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    border: 0px;
+    border-radius: 4px;
+}
+
+body.light input,
+body.light select {
+    background-color: #f1f1f1;
+    color: #222222;
+}
+
+body.dark input,
+body.dark select {
+    background-color: #333333 !important;
+    color: #fafafa;
+}
+
+button {
+    padding: 10px;
+    font-family: 'Roboto Slab', Verdana, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    border: 0px;
+    border-radius: 4px;
+    transition-duration: 0.4s;
+}
+
+body.light button {
+    background: #222222;
+    color: #fafafa;
+}
+
+body.dark button {
+    background: #fafafa;
+    color: #222222;
+}
+
+body.light button:hover,
+body.dark button:hover {
+    cursor: pointer;
+    transition-duration: 0.4s;
+    background-color: #27ae60;
+}
+
+.valid {
+    border: 2px solid darkgreen !important;
+}
+
+.invalid {
+    border: 2px solid darkred !important;
+}
+
+.unvisited {
+    border: 2px solid gray !important;
+}
+
+.val {
+    color: darkgreen !important;
+}
+
+.inval {
+    color: darkred !important;
+}
+
+.unvis {
+    color: white !important;
+}
+
+.disabled {
+    opacity: 0.25;
+    cursor: not-allowed !important;
+}
+
+body.dark input:focus,
+select:focus {
+    border: 2px solid white !important;
+    background-color: #111 !important;
+    box-shadow: 0 0 10px rgba(90, 150, 225, 0.9) !important;
+}
+
+body.dark input:hover,
+select:hover {
+    border: 2px solid navy !important;
+    background-color: #222 !important;
+    box-shadow: 0 0 10px rgba(90, 150, 225, 0.9) !important;
+}
+
+body.light input:focus,
+select:focus {
+    border: 2px solid gray !important;
+    background-color: #d2d2d2 !important;
+    box-shadow: 0 0 10px rgba(90, 150, 225, 0.9) !important;
+}
+
+body.light input:hover,
+select:hover {
+    border: 2px solid navy !important;
+    background-color: #d2d2d2 !important;
+    box-shadow: 0 0 10px rgba(90, 150, 225, 0.9) !important;
+}
+
+.errorContainer {
+    margin: 20px 0px;
+}
+
+.errorField {
+    color: darkgoldenrod;
+    margin: 20px 0px;
+}
+
+.errorFieldGroup {
+    margin: 20px 0px;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    display: none;
+}
+
+.modal-container {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 20px;
+    background-color: transparent;
+    justify-content: flex-end;
+    align-items: flex-start;
+    z-index: 1000;
+    transition: opacity 0.3s;
+}
+
+.modal-content {
+    color: #ccc;
+    background: linear-gradient(0deg, #222222, #333333);
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content p:last-of-type {
+    padding-bottom: 10px;
+}
+
+.modal-buttons {
+    padding-top: 10px;
+}
+
+.show-modal {
+    display: flex;
+    padding: 0px;
+}
+
+.show-backdrop {
+    display: block;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+a {
+    color: green;
+}
+
+a:visited {
+    color: darkseagreen;
+}
+
+a:hover {
+    color: darkgreen;
+}
+
+.request {
+    display: flex;
+    justify-content: center;
+}
+
+li:hover {
+    color: #6366f1;
+}
+
+.toasts-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 10px;
+}
+
+.toast {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.barcode-container
+{
+    box-sizing: border-box;
+    text-align: center;
+    padding-top: 20px;
+}
+/* 3. LAYOUT **************************************************************** */
+section.title {
+    padding: 30px;
+}
+
+section.generator {
+    padding: 0px 30px;
+}
+
+section.generator .people {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+section.generator .people .payer,
+section.generator .people .payee,
+section.generator .payment {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+section.generator .field {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+section.generator .field_container {
+    width: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+section.generator .field_half {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+section.generator .payment .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+}
+
+section.about {
+    padding: 120px 30px;
+}
+
+@media screen and (min-width: 768px) {
+
+    section.generator .people .payer,
+    section.generator .people .payee {
+        width: calc(50% - 20px);
+    }
+
+    section.generator .payment .iban {
+        width: calc(60% - 20px);
+    }
+
+    section.generator .payment .amount {
+        width: calc(20% - 20px);
+    }
+
+    section.generator .payment .currency {
+        width: calc(20% - 20px);
+    }
+
+    section.generator .payment .model {
+        width: calc(20% - 20px);
+    }
+
+    section.generator .payment .reference {
+        width: calc(60% - 20px);
+    }
+
+    section.generator .payment .purpose {
+        width: calc(20% - 20px);
+    }
+}
+
+@media screen and (min-width: 1024px) {
+
+    section.generator .people .payer,
+    section.generator .people .payee {
+        width: calc(50% - 20px);
+    }
+
+    button {
+        padding: 10px 20px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    img {
+        position: relative;
+        left: 0;
+        transform: translateX(-80px);
+    }
+
+    .modal-buttons button {
+        padding: 10px;
+    }
+}
