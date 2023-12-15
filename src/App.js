@@ -36,6 +36,7 @@ export default function App() {
     const [importedReceiver, setImportedReceiver] = useState(false);
     const [toasts, setToasts] = useState([]);
     const [lastValidIBAN, setLastValidIBAN] = useState('');
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const canvasRef = useRef(null);
 
@@ -46,6 +47,14 @@ export default function App() {
         document.body.classList.toggle('dark', !darkMode);
         document.body.classList.toggle('light', darkMode);
     };
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     /* SUBMIT COOLDOWN */
 
@@ -361,10 +370,10 @@ export default function App() {
     /* VALIDATION LOGIC */
 
     const validateForm = () => {
-        if (inputData.amount.toString() === '' || isNaN(parseInt(inputData.amount))) {
+        if (inputData.amount.toString() === '' || isNaN(parseFloat(inputData.amount.replace(/\./g, '').replace(',', '.')))) {
             updatedErrors.amount += 'Unesite ispravan iznos.\n';
         } else {
-            if (parseInt(inputData.amount) <= 0) {
+            if (parseFloat(inputData.amount.replace(/\./g, '').replace(',', '.')) <= 0) {
                 updatedErrors.amount += 'Iznos mora biti veći od 0.\n'
             }
         }
@@ -440,20 +449,20 @@ export default function App() {
         const referenceValue = inputData.receiver.reference.trim();
         const hyphenPositions = [...referenceValue.matchAll(/-/g)].map(match => match.index);
         const consecutiveDigits = referenceValue.match(/\d{13,}/g);
-        
+
         if (referenceValue.length > 0) {
             if (!/^[0-9-]+$/.test(referenceValue)) {
                 updatedErrors.receiver.reference += 'Poziv na broj primatelja može sadržavati samo brojeve i crtice.\n';
             }
-        
+
             if (referenceValue.startsWith('-') || referenceValue.endsWith('-')) {
                 updatedErrors.receiver.reference += 'Poziv na broj primatelja ne smije počinjati ili završavati crticom.\n';
             }
-        
+
             if (hyphenPositions.some((pos, index) => index > 0 && pos === hyphenPositions[index - 1] + 1)) {
                 updatedErrors.receiver.reference += 'Poziv na broj primatelja ne smije sadržavati uzastopne crtice.\n';
             }
-        
+
             if (consecutiveDigits && consecutiveDigits.some(digits => digits.length > 12)) {
                 updatedErrors.receiver.reference += 'Poziv na broj primatelja ne smije sadržavati više od 12 uzastopnih znamenaka između crtica.\n';
             }
@@ -548,9 +557,9 @@ export default function App() {
 
         switch (fieldName) {
             case 'amount':
-                if (inputData.amount.toString() === '' || isNaN(parseInt(inputData.amount))) {
+                if (inputData.amount.toString() === '' || isNaN(parseFloat(inputData.amount.replace(/\./g, '').replace(',', '.')))) {
                     errorMessage = 'Unesite ispravan iznos.\n';
-                } else if (parseInt(inputData.amount) <= 0) {
+                } else if (parseFloat(inputData.amount.replace(/\./g, '').replace(',', '.')) <= 0) {
                     errorMessage = 'Iznos mora biti veći od 0.\n';
                 }
                 break;
@@ -608,20 +617,20 @@ export default function App() {
                     const referenceValue = inputData.receiver.reference.trim();
                     const hyphenPositions = [...referenceValue.matchAll(/-/g)].map(match => match.index);
                     const consecutiveDigits = referenceValue.match(/\d{13,}/g);
-    
+
                     if (referenceValue.length > 0) {
                         if (!/^[0-9-]+$/.test(referenceValue)) {
                             errorMessage += 'Poziv na broj primatelja može sadržavati samo brojeve i crtice.\n';
                         }
-    
+
                         if (referenceValue.startsWith('-') || referenceValue.endsWith('-')) {
                             errorMessage += 'Poziv na broj primatelja ne smije počinjati ili završavati crticom.\n';
                         }
-    
+
                         if (hyphenPositions.some((pos, index) => index > 0 && pos === hyphenPositions[index - 1] + 1)) {
                             errorMessage += 'Poziv na broj primatelja ne smije sadržavati uzastopne crtice.\n';
                         }
-    
+
                         if (consecutiveDigits && consecutiveDigits.some(digits => digits.length > 12)) {
                             errorMessage += 'Poziv na broj primatelja ne smije sadržavati više od 12 uzastopnih znamenaka između crtica.\n';
                         }
@@ -658,11 +667,11 @@ export default function App() {
             field = arg2;
             value = arg3;
         }
-    
+
         setInputData((prevInputData) => {
             if (field) {
                 const updatedSection = { ...prevInputData[section], [field]: value };
-    
+
                 if (section === 'receiver' && field === 'reference') {
                     let updatedModel;
                     if (value.trim() === '') {
@@ -677,11 +686,11 @@ export default function App() {
                     const updatedReference = value === '99' ? '' : prevInputData.receiver.reference;
                     updatedSection.reference = updatedReference;
                 }
-    
+
                 if (['sender', 'receiver'].includes(section)) {
                     updatedSection.place = `${updatedSection.postcode} ${updatedSection.city}`;
                 }
-    
+
                 return {
                     ...prevInputData,
                     [section]: updatedSection,
@@ -717,9 +726,9 @@ export default function App() {
         const pressedKey = event.key.toUpperCase();
         const currentValue = event.target.value;
         const cursorPosition = event.target.selectionStart;
-        
+
         const allowedKeys = ['TAB', 'BACKSPACE', 'DELETE', 'ARROWLEFT', 'ARROWRIGHT', 'F5'];
-    
+
         if (allowedKeys.includes(pressedKey) || (event.ctrlKey && ['C', 'V', 'A'].includes(pressedKey))) {
             return;
         }
@@ -748,35 +757,35 @@ export default function App() {
         const pressedKey = event.key;
         const currentValue = event.target.value;
         const cursorPosition = event.target.selectionStart;
-    
+
         const allowedKeys = ['Tab', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'F5'];
-    
+
         if (allowedKeys.includes(pressedKey) || (event.ctrlKey && ['c', 'v', 'a'].includes(pressedKey.toLowerCase()))) {
             return;
         }
-    
+
         if (pressedKey === '-') {
             const hyphenCount = currentValue.split('-').length - 1;
-    
+
             if (cursorPosition === 0 || currentValue[cursorPosition - 1] === '-' || hyphenCount >= 2) {
                 event.preventDefault();
                 return;
             }
             return;
         }
-    
+
         if (pressedKey.match(/^\d$/)) {
             // Check if overall length with new digit exceeds 22 characters
             if (currentValue.length >= 22) {
                 event.preventDefault();
                 return;
             }
-    
+
             // Split the currentValue into segments separated by hyphens
             const parts = currentValue.split('-');
             let accumulatedLength = 0;
             let segmentIndex = -1;
-    
+
             // Identify the segment where the cursor is located
             for (let i = 0; i < parts.length; i++) {
                 if (cursorPosition <= accumulatedLength + parts[i].length) {
@@ -785,7 +794,7 @@ export default function App() {
                 }
                 accumulatedLength += parts[i].length + 1; // +1 for the hyphen
             }
-    
+
             // If a valid segment is found and the digit doesn't result in more than 12 consecutive digits
             if (segmentIndex !== -1) {
                 let segment = parts[segmentIndex];
@@ -847,18 +856,18 @@ export default function App() {
         tempCanvas.width = canvasRef.current.width;
         tempCanvas.height = canvasRef.current.height;
         const ctx = tempCanvas.getContext('2d');
-    
+
         ctx.globalCompositeOperation = 'copy';
-        
+
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-    
+
         ctx.globalCompositeOperation = 'source-over';
-        
+
         ctx.drawImage(canvasRef.current, 0, 0);
-    
+
         const barcodeDataURL = tempCanvas.toDataURL('image/jpeg', 1.0);
-    
+
         const link = document.createElement('a');
         link.href = barcodeDataURL;
         link.download = 'barcode.jpg';
@@ -874,14 +883,14 @@ export default function App() {
         tempCanvas.width = canvasRef.current.width;
         tempCanvas.height = canvasRef.current.height;
         const ctx = tempCanvas.getContext('2d');
-    
+
         ctx.globalCompositeOperation = 'copy';
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-    
+
         ctx.globalCompositeOperation = 'source-over';
         ctx.drawImage(canvasRef.current, 0, 0);
-    
+
         tempCanvas.toBlob(async (blob) => {
             if (blob) {
                 try {
@@ -991,7 +1000,7 @@ export default function App() {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const fieldsToUpdate = [];
-        
+
         searchParams.forEach((value, key) => {
             const keyParts = key.split(".");
             if (keyParts.length === 2) {
@@ -1005,7 +1014,7 @@ export default function App() {
                                 [field]: field === 'amount' ? parseFloat(value).toString() : value
                             }
                         };
-                    } 
+                    }
                 });
                 fieldsToUpdate.push(`${section}.${field}`);
             } else if (keyParts.length === 1) {
@@ -1019,7 +1028,7 @@ export default function App() {
                 fieldsToUpdate.push(field);
             }
         });
-    
+
         setVisited(prevVisited => {
             let newVisited = { ...prevVisited };
             fieldsToUpdate.forEach(field => {
@@ -1028,6 +1037,122 @@ export default function App() {
             return newVisited;
         });
     }, [location.search]);
+
+    const displayQueryParams = () => {
+        const queryParams = `{
+    "amount",
+    "purpose",
+    "description",
+    "sender": {
+        "name",
+        "street",
+        "postcode",
+        "city",
+    },
+    "receiver": {
+        "name",
+        "street",
+        "postcode",
+        "city",
+        "iban",
+        "model",
+        "reference",
+    }
+}`;
+        const params = `
+amount
+purpose
+description
+    /* PLATITELJ */
+sender.name
+sender.street
+sender.postcode
+sender.city
+
+    /* PRIMATELJ */
+receiver.name
+receiver.street
+receiver.postcode
+receiver.city
+receiver.iban
+receiver.model
+receiver.reference
+        `;
+
+        const values = `
+Iznos (npr 9.999,99)
+Šifra (po ISO 20022)
+Opis plaćanja
+
+Ime i prezime|Naziv
+Ulica i kućni broj
+Poštanski broj
+Grad/mjesto/naselje
+
+
+Ime i prezime|Naziv
+Ulica i kućni broj
+Poštanski broj
+Grad/mjesto/naselje
+IBAN
+Model (bez HR)
+Poziv na broj
+        `
+
+        return (
+            <div style={{ display: 'flex' }}>
+                <pre
+                    style={{
+                        backgroundColor: 'black',
+                        fontSize: '12px',
+                        color: 'limegreen',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        margin: '5px',
+                        overflowX: 'auto',
+                        whiteSpace: 'pre-wrap',
+                        wordWrap: 'break-word',
+                        flexBasis: windowWidth < 625 ? '50%' : '33%',
+                    }}
+                >
+                    {queryParams}
+                </pre>
+                <pre
+                    style={{
+                        backgroundColor: 'black',
+                        fontSize: '12px',
+                        color: 'darkgoldenrod',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        margin: '5px',
+                        overflowX: 'auto',
+                        whiteSpace: 'pre-wrap',
+                        wordWrap: 'break-word',
+                        flexBasis: windowWidth < 625 ? '50%' : '33%',
+                    }}
+                >
+                    {params}
+                </pre>
+                <pre
+                    style={{
+                        backgroundColor: 'black',
+                        fontSize: '12px',
+                        color: 'red',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        margin: '5px',
+                        overflowX: 'auto',
+                        whiteSpace: 'pre-wrap',
+                        wordWrap: 'break-word',
+                        flexBasis: windowWidth < 625 ? '50%' : '33%',
+                        display: windowWidth < 625 ? 'none' : 'block'
+                    }}
+                >
+                    {values}
+                </pre>
+            </div>
+        );
+    };
 
     return (
         <section className={`${darkMode ? 'dark' : 'light'}`}>
@@ -1395,6 +1520,31 @@ export default function App() {
                 </div>
             </section>
             {/* ABOUT */}
+            <section className="content">
+                <h2 className="title" style={{ marginTop: '20px', marginBottom: '20px' }}>Struktura URL query parametara:</h2>
+                {displayQueryParams()}
+                <p><strong>Napomene:</strong></p>
+                <ul>
+                    <li><strong>currency je <i><u>uvijek</u></i> EUR i ne može se mijenjati!</strong></li>
+                    <li><strong>amount:</strong> <i><u>sve</u></i> znamenke i bar decimalni zarez
+                        <ul>
+                            <li>točka (separator za tisuće) opcionalna</li>
+                            <li>npr: 0,01 / 0,50 / 1337,00 / 9.999,99</li>
+                        </ul>
+                    </li>
+                    <li><strong>purpose:</strong> 4 velika slova
+                        <ul>
+                            <li>sukladno ISO 20022 standardu</li>
+                            <li>opcionalno jer je zadan default: <strong>OTHR</strong></li>
+                        </ul>
+                    </li>
+                    <li><strong>sender.postcode:</strong> hrvatski poštanski broj</li>
+                    <li><strong>sender.city:</strong> pripadajući grad/mjesto/naselje</li>
+                    <li><strong>receiver.postcode:</strong> hrvatski poštanski broj</li>
+                    <li><strong>receiver.city:</strong> pripadajući grad/mjesto/naselje</li>
+                    <li><strong>receiver.model:</strong> <i><u>samo</u></i> 2 znamenke (npr 00)</li>
+                </ul>
+            </section>
             <section className="about">
                 <div className="content">
                     <h3>Ukratko o projektu</h3>

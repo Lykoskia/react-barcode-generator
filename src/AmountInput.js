@@ -58,7 +58,7 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
             onChange={handleInputChange}
             onBlur={() => handleBlur('amount')}
-            placeholder="od 1 do 999.999,99"
+            placeholder="max 999.999,99"
             maxLength={8}
         />
     );
