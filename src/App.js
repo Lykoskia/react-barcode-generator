@@ -1529,7 +1529,7 @@ Poziv na broj
                     <li><strong>amount:</strong> <i><u>sve</u></i> znamenke i bar decimalni zarez
                         <ul>
                             <li>točka (separator za tisuće) opcionalna</li>
-                            <li>npr: 0,01 / 0,50 / 1337,00 / 9.999,99</li>
+                            <li>npr: 0,01 / 123,45 / 1337,00 / 9.999,99</li>
                         </ul>
                     </li>
                     <li><strong>purpose:</strong> 4 velika slova
