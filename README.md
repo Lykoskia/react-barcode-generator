@@ -25,7 +25,7 @@ Added:
   - Also added BBAN / accountNumber validation through the control digit on constructed IBANs which select a bank and input the account number.
   - This makes sure that the account number might exist, as the ISO 7064 MOD-11-10 algorithm is implemented and calculates the control digit from the first 9 digits, then checks if the 10th digit corresponds to it.
 
-- Added AutoNumeric.js which formats the input of the amount field live as you type. The final entered value must be at least 1,00.
+- Added AutoNumeric.js which formats the input of the amount field live as you type. Now supports amounts 0,01 (1 cent) and above. When importing from query parameters, decimal spaces must be separated by a comma and always specified, even if the amount is x,00. Used to be that 1,00 was the minimum because I was using parseInt / parseFloat without removing the thousands separator dot or replacing the decimal separator comma with a dot in the calculation. So 0,99 would parse into 0 and the validation would fail. This is now fixed so that 0,01 is valid and you can happily send your friend 1 cent, free of charge.
 
 - Added a list of all post codes and places into a select element, replacing the original input element which only checked for 5 digits followed by a space and a string with a max length.
    - This includes a check for the final submitted value if it matches one of the listed options to prevent request tampering.
