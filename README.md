@@ -35,10 +35,9 @@ Added:
 - Added a download option and a Web share option upon successful generation. The data: URL is now saved in the user's localStorage as well.
 
 - Cookies remember sender data so future visits from the same person/browser will automatically fill it in for convenience.
-  - The cookie will persist for a year.
-  - NEW: Added cookie options so the user can decide if this happens or not.
-  
-  - NEW: Fixed the responsiveness of the modal on smaller devices, though the app itself isn't supported on mobile due to CORS issues.
+   - The cookie will persist for a year.
+   - NEW: Added cookie options so the user can decide if this happens or not.
+   - NEW: Fixed the responsiveness of the modal on smaller devices, though the app itself isn't supported on mobile due to CORS issues.
       - In the final version of this app which will be hosted on a server, the server will be whitelisted by the API so CORS will no longer break the app without workarounds (which are not even possible on mobile).
         - NEW: The app is now fully supported on mobile devices because there are no more API requests (everything is generated locally) so there is no more crossorigin.
 
