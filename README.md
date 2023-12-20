@@ -38,24 +38,24 @@ Added:
    - The cookie will persist for a year.
    - NEW: Added cookie options so the user can decide if this happens or not.
    - NEW: Fixed the responsiveness of the modal on smaller devices, though the app itself isn't supported on mobile due to CORS issues.
-      - In the final version of this app which will be hosted on a server, the server will be whitelisted by the API so CORS will no longer break the app without workarounds (which are not even possible on mobile).
-        - NEW: The app is now fully supported on mobile devices because there are no more API requests (everything is generated locally) so there is no more crossorigin.
+      - In the final version of this app which will be hosted on a server, the domain will be whitelisted by the API so CORS will no longer break the app without workarounds (which are not even possible on mobile).
+        - NEW: The app is now fully supported on mobile devices because there are no more API calls (everything is generated locally) so there is no more crossorigin.
 
 - Moved most of the data constants into a separate file for easier code maintainability.
    - Added a separate CurrencyInput component which utilizes AutoNumeric and gets passed the App's props, because I promised myself I would make at least one child component with variable props in this app.
    - NEW: Also added SearchableSelect as another child component. This one is used by 2 fields instead of 1. Fixed it being properly populated by the cookie if consent is given.
    - NEW: Replaced SearchableSelect with PlaceLookup which looks up the corresponding value (and allows it to be edited) instead of offering a filterable search.
 
-- Added a 1 minute timeout for submission as a little bit of basic spam/bot protection and a fun little exercise :).
+- Added a 1 minute timeout for submission as a little bit of basic spam/bot protection and a fun little exercise :). This was relevant back when it requested the barcode from an external API, but I kept it in.
 
 - Added error paragraphs back, in a better way which doesn't disrupt the flow of the form.
 
 - Added a trigger that forces all fields to be visited and validated upon submission.
-  - Otherwise during input, leaving (blurring) a field will trigger validation styling of that specific field, and trigger the rendering of an array of errors whose elements are updated based on their validation.
+  - Otherwise during input, leaving (blurring) a field will trigger validation of that specific field, and trigger the rendering of an array of errors whose elements are updated based on their validation.
 
-- Added URL parameters so the form can be filled dynamically by clicking a bookmark.
+- Added URL parameters so the form can be filled dynamically by clicking a link. Added sample query parameter usage in this readme and a guide for using them inside the app itself (JSON structure, parameter names and notes).
   
-- Added the option to save receiver data in localStorage and pull it into the form.
+- Added the option to save receiver data in localStorage and pull it into the form. Whenever you think you might need to reuse receiver data you can just save it and then select that receiver from the list on subsequent visits.
 
 - Added some basic interactions and validations for model and reference fields;
   - Clearing the reference sets the model to HR99 (this is the only model that accepts an empty reference).
@@ -69,3 +69,4 @@ Possibilities for the distant future:
 
 - Might add a check if the reference format matches the model/purpose selection, but since I am not very smart and the specification is written in Klingon, petaQ it.
   - NEW: Actually implemented some basic rules and functionalities described above. Going further into detail per specific model might not be wise for my sanity, but if this ever outgrows its purpose as a pet project for practice, I might consider it.
+  - The main problem is that I can't even find what each model is actually used for, and in 99% of cases it's either 00, 01 or 99 anyway, which fit both the field interactions, the input restrictions and the final regex validations. Adjusting the regex validation for each individual model would be relatively easy, but implementing input restrictions for each one separately would be quite the headache without even a proper usecase. Given that most of those other models are only used when making very specific transactions, I left the options for all of them in the array, but those will probably be some kind of bill which will almost surely contain a barcode. Then again, a counterargument is that recently I helped a friend speed up his payment of a provided bill with no barcode (since the amount was arbitrary) which required model 11 (and I can't even find what that model is even used for). So, the options are all there, 99,99% of the time the implemented validations will be all that's necessary to ensure everything is correct, but I wanted to be as liberal with edge cases as possible without allowing users to accidentally make a huge mistake.
