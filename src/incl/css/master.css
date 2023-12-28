@@ -196,11 +196,18 @@ body.dark button {
     color: #222222;
 }
 
-body.light button:hover,
-body.dark button:hover {
+body.light button:hover:not(:disabled),
+body.dark button:hover:not(:disabled) {
     cursor: pointer;
     transition-duration: 0.4s;
     background-color: #27ae60;
+}
+
+body.light button:disabled:hover,
+body.dark button:disabled:hover {
+    cursor: not-allowed;
+    transition-duration: 0.4s;
+    background-color: red;
 }
 
 .valid {
