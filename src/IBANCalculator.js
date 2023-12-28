@@ -289,45 +289,31 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                 >
                     X
                 </button>
-                <div
-                    style={{
-                        paddingTop: '30px',
-                        paddingLeft: '30px',
-                        paddingRight: '30px',
-                        position: 'relative',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: 'calc(100% - 60px)'
-                    }}
-                >
-                    <label htmlFor="bankNameInput">Naziv banke</label>
-                    <input
-                        id="bankNameInput"
-                        list="bankNames"
-                        value={selectedBank}
-                        onChange={handleBankNameChange}
-                        placeholder="Pretražite po nazivu banke"
-                        style={{ width: '100%' }}
-                    />
-                    <datalist id="bankNames">
-                        {croatianBanks.map(bank => (
-                            <option key={bank.code} value={bank.name} />
-                        ))}
-                    </datalist>
-            
-                    <label htmlFor="bankCodeDisplay">Šifra banke (VBDI)</label>
-                    <input
-                        id="bankCodeDisplay"
-                        type="text"
-                        value={bankCode}
-                        placeholder="Pripadajuća šifra banke će se ovdje prikazati"
-                        readOnly
-                        style={{ width: '100%', backgroundColor: darkMode ? (bankCode ? '#333333' : 'black') : (bankCode ? '#dadada' : '#bababa') }}
-                    />
-            
-                    <label htmlFor="accountNumberInput">Broj računa</label>
+                <div style={{ paddingTop: '30px', paddingLeft: '30px', paddingRight: '30px' }}>
+                    <label htmlFor="bankNameInput" style={{ display: 'block', marginBottom: '5px' }}>Naziv banke</label>
+                    <div style={{ display: 'flex', marginBottom: '20px' }}>
+                        <input
+                            id="bankNameInput"
+                            list="bankNames"
+                            value={selectedBank}
+                            onChange={handleBankNameChange}
+                            placeholder="Pretražite po nazivu banke"
+                            style={{ flex: 1, marginRight: '10px' }}
+                        />
+                        <datalist id="bankNames">
+                            {croatianBanks.map(bank => (
+                                <option key={bank.code} value={bank.name} />
+                            ))}
+                        </datalist>
+                        <input
+                            type="text"
+                            value={bankCode}
+                            placeholder="VBDI banke će se ovdje prikazati"
+                            readOnly
+                            style={{ flex: 1, backgroundColor: darkMode ? (bankCode ? '#333333' : 'black') : (bankCode ? '#dadada' : '#bababa') }}
+                        />
+                    </div>
+                    <label htmlFor="accountNumberInput" style={{ display: 'block', marginBottom: '5px' }}>Broj računa</label>
                     <input
                         id="accountNumberInput"
                         type="text"
@@ -337,9 +323,9 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                         onPaste={handlePaste}
                         maxLength={10}
                         placeholder="Upišite broj računa"
-                        style={{ width: '100%', borderColor: isAccountNumberValid ? '' : 'red' }}
+                        style={{ width: '100%', borderColor: isAccountNumberValid ? '' : 'red', marginBottom: '20px' }}
                     />
-                    <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <button
                             disabled={!isInputValid}
                             onClick={handleGenerateIBAN}
@@ -351,12 +337,7 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                         >
                             {isInputValid ? 'Generirajte' : 'Fale podaci'}
                         </button>
-                        <button
-                            onClick={handleReset}
-                            style={{ marginLeft: '10px' }}
-                        >
-                            Resetirajte
-                        </button>
+                        <button onClick={handleReset} style={{ marginLeft: '10px' }}>Resetirajte</button>
                     </div>
                 </div>
             </Modal>
@@ -375,48 +356,32 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                 >
                     X
                 </button>
-                <div
-                    style={{
-                        paddingTop: '30px',
-                        paddingLeft: '30px',
-                        paddingRight: '30px',
-                        position: 'relative',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        height: 'calc(100% - 60px)'
-                    }}
-                >
-                    <label htmlFor="serviceSelectionInput">Naziv institucije</label>
-                    <input
-                        id="serviceSelectionInput"
-                        list="services"
-                        type="text"
-                        value={selectedService}
-                        onChange={handleServiceInputChange}
-                        placeholder="Pretražite institucije"
-                        style={{ width: '100%' }}
-                    />
-                    <datalist id="services">
-                        {serviceIBANMapping.map(serviceObj => (
-                            <option key={serviceObj.service} value={serviceObj.service} />
-                        ))}
-                    </datalist>
-            
-                    {/* IBAN Display */}
-                    <label htmlFor="ibanDisplay">Odabrani IBAN</label>
-                    <input
-                        id="ibanDisplay"
-                        type="text"
-                        value={selectedIBAN}
-                        readOnly
-                        placeholder="Odabrani IBAN će se ovdje prikazati"
-                        style={{ width: '100%', backgroundColor: darkMode ? (isIBANSelected(selectedIBAN) ? '#333333' : 'black') : (isIBANSelected(selectedIBAN) ? '#dadada' : '#bababa') }}
-                    />
-            
-                    <div style={{ width: '100%', marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                <div style={{ paddingTop: '30px', paddingLeft: '30px', paddingRight: '30px' }}>
+                    <label htmlFor="serviceSelectionInput" style={{ display: 'block', marginBottom: '5px' }}>Service</label>
+                    <div style={{ display: 'flex', marginBottom: '20px' }}>
+                        <input
+                            id="serviceSelectionInput"
+                            list="services"
+                            type="text"
+                            value={selectedService}
+                            onChange={handleServiceInputChange}
+                            placeholder="Pretražite usluge"
+                            style={{ flex: 1, marginRight: '10px' }}
+                        />
+                        <datalist id="services">
+                            {serviceIBANMapping.map(serviceObj => (
+                                <option key={serviceObj.service} value={serviceObj.service} />
+                            ))}
+                        </datalist>
+                        <input
+                            type="text"
+                            value={selectedIBAN}
+                            readOnly
+                            placeholder="Odabrani IBAN će se ovdje prikazati"
+                            style={{ flex: 1, backgroundColor: darkMode ? (isIBANSelected(selectedIBAN) ? '#333333' : 'black') : (isIBANSelected(selectedIBAN) ? '#dadada' : '#bababa') }}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <button
                             disabled={!isIBANSelected(selectedIBAN)}
                             onClick={handleProceedClick}
@@ -428,12 +393,7 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                         >
                             {isIBANSelected(selectedIBAN) ? 'Odaberite' : 'Fale podaci'}
                         </button>
-                        <button
-                            onClick={handleClearClick}
-                            style={{ marginLeft: '10px' }}
-                        >
-                            Resetirajte
-                        </button>
+                        <button onClick={handleClearClick} style={{ marginLeft: '10px' }}>Resetirajte</button>
                     </div>
                 </div>
             </Modal>
