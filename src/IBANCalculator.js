@@ -285,7 +285,8 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                 <button
                     type="button"
                     onClick={() => setGenerateModalIsOpen(false)}
-                    style={{ position: 'absolute', top: '10px', right: '10px', padding: '4px 8px' }}>
+                    style={{ position: 'absolute', top: '10px', right: '10px', padding: '4px 8px' }}
+                >
                     X
                 </button>
                 <div
@@ -297,45 +298,47 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        flexWrap: 'wrap',
-                        height: 'calc(100% - 30px)'
+                        alignItems: 'center',
+                        height: 'calc(100% - 60px)'
                     }}
                 >
-                    <div style={{ position: 'relative', width: '100%', marginBottom: '20px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <input
-                                list="bankNames"
-                                value={selectedBank}
-                                onChange={handleBankNameChange}
-                                placeholder="Pretražite po imenu banke"
-                                style={{ flex: 1 }}
-                            />
-                            <datalist id="bankNames">
-                                {croatianBanks.map(bank => (
-                                    <option key={bank.code} value={bank.name} />
-                                ))}
-                            </datalist>
-                            <input
-                                type="text"
-                                value={bankCode}
-                                placeholder="Pripadajuća šifra banke će se ovdje prikazati"
-                                readOnly
-                                style={{ flex: 1, marginLeft: '20px', backgroundColor: bankCode ? '#dadada' : '#bababa' }}
-                            />
-                        </div>
-                        <div style={{ width: '100%', marginTop: '20px' }}>
-                            <input
-                                type="text"
-                                value={accountNumber}
-                                onKeyDown={handleKeyDown}
-                                onChange={handleAccountNumberChange}
-                                onPaste={handlePaste}
-                                maxLength={10}
-                                placeholder="Upišite broj računa"
-                                style={{ width: '100%', borderColor: isAccountNumberValid ? '' : 'red' }}
-                            />
-                        </div>
-                    </div>
+                    <label htmlFor="bankNameInput">Naziv banke</label>
+                    <input
+                        id="bankNameInput"
+                        list="bankNames"
+                        value={selectedBank}
+                        onChange={handleBankNameChange}
+                        placeholder="Pretražite po nazivu banke"
+                        style={{ width: '100%' }}
+                    />
+                    <datalist id="bankNames">
+                        {croatianBanks.map(bank => (
+                            <option key={bank.code} value={bank.name} />
+                        ))}
+                    </datalist>
+            
+                    <label htmlFor="bankCodeDisplay">Šifra banke (VBDI)</label>
+                    <input
+                        id="bankCodeDisplay"
+                        type="text"
+                        value={bankCode}
+                        placeholder="Pripadajuća šifra banke će se ovdje prikazati"
+                        readOnly
+                        style={{ width: '100%', backgroundColor: darkMode ? (bankCode ? '#333333' : 'black') : (bankCode ? '#dadada' : '#bababa') }}
+                    />
+            
+                    <label htmlFor="accountNumberInput">Broj računa</label>
+                    <input
+                        id="accountNumberInput"
+                        type="text"
+                        value={accountNumber}
+                        onKeyDown={handleKeyDown}
+                        onChange={handleAccountNumberChange}
+                        onPaste={handlePaste}
+                        maxLength={10}
+                        placeholder="Upišite broj računa"
+                        style={{ width: '100%', borderColor: isAccountNumberValid ? '' : 'red' }}
+                    />
                     <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <button
                             disabled={!isInputValid}
@@ -383,31 +386,36 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                         justifyContent: 'center',
                         alignItems: 'center',
                         flexWrap: 'wrap',
-                        height: 'calc(100% - 30px)'
+                        height: 'calc(100% - 60px)'
                     }}
                 >
-                    <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: windowWidth < 600 ? 'column' : 'row', marginBottom: '20px' }}>
-                        <input
-                            list="services"
-                            type="text"
-                            value={selectedService}
-                            onChange={handleServiceInputChange}
-                            placeholder="Pretražite usluge"
-                            style={{ flex: 1, marginRight: windowWidth < 600 ? '0px' : '10px', marginBottom: windowWidth < 600 ? '10px' : '0px' }}
-                        />
-                        <datalist id="services">
-                            {serviceIBANMapping.map(serviceObj => (
-                                <option key={serviceObj.service} value={serviceObj.service} />
-                            ))}
-                        </datalist>
-                        <input
-                            type="text"
-                            value={selectedIBAN}
-                            readOnly
-                            placeholder="Odabrani IBAN će se ovdje prikazati"
-                            style={{ flex: 1, marginLeft: windowWidth < 600 ? '0px' : '10px', marginTop: windowWidth < 600 ? '10px' : '0px', backgroundColor: isIBANSelected(selectedIBAN) ? '#dadada' : '#bababa' }}
-                        />
-                    </div>
+                    <label htmlFor="serviceSelectionInput">Naziv institucije</label>
+                    <input
+                        id="serviceSelectionInput"
+                        list="services"
+                        type="text"
+                        value={selectedService}
+                        onChange={handleServiceInputChange}
+                        placeholder="Pretražite institucije"
+                        style={{ width: '100%' }}
+                    />
+                    <datalist id="services">
+                        {serviceIBANMapping.map(serviceObj => (
+                            <option key={serviceObj.service} value={serviceObj.service} />
+                        ))}
+                    </datalist>
+            
+                    {/* IBAN Display */}
+                    <label htmlFor="ibanDisplay">Odabrani IBAN</label>
+                    <input
+                        id="ibanDisplay"
+                        type="text"
+                        value={selectedIBAN}
+                        readOnly
+                        placeholder="Odabrani IBAN će se ovdje prikazati"
+                        style={{ width: '100%', backgroundColor: darkMode ? (isIBANSelected(selectedIBAN) ? '#333333' : 'black') : (isIBANSelected(selectedIBAN) ? '#dadada' : '#bababa') }}
+                    />
+            
                     <div style={{ width: '100%', marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
                         <button
                             disabled={!isIBANSelected(selectedIBAN)}
