@@ -357,7 +357,7 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                     X
                 </button>
                 <div style={{ paddingTop: '30px', paddingLeft: '30px', paddingRight: '30px' }}>
-                    <label htmlFor="serviceSelectionInput" style={{ display: 'block', marginBottom: '5px' }}>Service</label>
+                    <label htmlFor="serviceSelectionInput" style={{ display: 'block', marginBottom: '5px' }}>Pretražite usluge</label>
                     <div style={{ display: 'flex', marginBottom: '20px' }}>
                         <input
                             id="serviceSelectionInput"
