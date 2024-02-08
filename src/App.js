@@ -668,6 +668,17 @@ export default function App() {
             value = arg3;
         }
 
+        // Adun willing, this little check here will finally block invalid inputs in the IBAN field on virtual keyboards, while allowing the input sequence.
+        if (section === 'receiver' && field === 'iban') {
+            const upperValue = value.toUpperCase();
+            const regex = /^HR[0-9]{0,19}$/;
+            if (!regex.test(upperValue) && upperValue !== 'H' && upperValue !== 'HR' && upperValue !== '') {
+                return;
+            } else {
+                value = upperValue;
+            }
+        }
+
         setInputData((prevInputData) => {
             if (field) {
                 const updatedSection = { ...prevInputData[section], [field]: value };
