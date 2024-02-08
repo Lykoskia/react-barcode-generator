@@ -373,12 +373,11 @@ li:hover {
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 5px;
-    background-color: darkred; /* Example color, adjust as needed */
+    background-color: darkred;
     color: white;
     transition: transform 0.5s ease-in-out, opacity 0.5s ease;
     transform: translateX(100%);
     opacity: 0;
-    /* Make sure to add initial off-screen state here if needed */
 }
 
 .toast.show {
