@@ -668,14 +668,27 @@ export default function App() {
             value = arg3;
         }
 
-        // Adun willing, this little check here will finally block invalid inputs in the IBAN field on virtual keyboards, while allowing the input sequence.
-        if (section === 'receiver' && field === 'iban') {
-            const upperValue = value.toUpperCase();
-            const regex = /^HR[0-9]{0,19}$/;
-            if (!regex.test(upperValue) && upperValue !== 'H' && upperValue !== 'HR' && upperValue !== '') {
-                return;
-            } else {
-                value = upperValue;
+        // Adding Reference virtual keyboard input restrictions and refactoring the existing IBAN fix since they are both fields in the Receiver section.
+        if (section === 'receiver') {
+            if (field === 'iban') {
+                const upperValue = value.toUpperCase();
+                const regex = /^HR[0-9]{0,19}$/;
+                if (!regex.test(upperValue) && upperValue !== 'H' && upperValue !== 'HR' && upperValue !== '') {
+                    return;
+                } else {
+                    value = upperValue;
+                }
+            } else if (field === 'reference') {
+                const newValue = value.replace(/[^0-9-]/g, '');
+                const parts = newValue.split('-');
+                const filteredParts = parts.map((part, index) => 
+                    index === 0 ? part.substring(0, 12) : part.substring(0, 12)
+                ).filter(part => part !== '');
+    
+                const updatedValue = filteredParts.join('-').substring(0, 22);
+                if (updatedValue !== value) {
+                    value = updatedValue;
+                }
             }
         }
 
@@ -786,13 +799,11 @@ export default function App() {
         }
 
         if (pressedKey.match(/^\d$/)) {
-            // Check if overall length with new digit exceeds 22 characters
             if (currentValue.length >= 22) {
                 event.preventDefault();
                 return;
             }
 
-            // Split the currentValue into segments separated by hyphens
             const parts = currentValue.split('-');
             let accumulatedLength = 0;
             let segmentIndex = -1;
