@@ -677,25 +677,29 @@ export default function App() {
                 } else {
                     value = upperValue;
                 }
-            } else if (field === 'reference') {
+            }
+            if (field === 'reference') {
                 let newValue = value.replace(/[^0-9-]/g, '');
                 let hyphenCount = (newValue.match(/-/g) || []).length;
-                
-                if (hyphenCount <= 2) {
-                    let segments = newValue.split('-');
-                    let processedSegments = segments.map(segment => segment.substring(0, 12));
-                    newValue = processedSegments.join('-');
     
-                    if (newValue.startsWith('-') || newValue.endsWith('-')) {
+                if (hyphenCount <= 2) {
+                    if (newValue.length > 1) {
                         newValue = newValue.replace(/^-+|-+$/g, '');
                     }
+    
+                    let segments = newValue.split('-');
+                    let processedSegments = segments.map(segment => {
+                        return segment.substring(0, 12);
+                    });
+    
+                    newValue = processedSegments.join('-');
                     if (newValue.length > 22) newValue = newValue.substring(0, 22);
+    
+                    if (newValue !== value) {
+                        value = newValue;
+                    }
                 } else {
                     return;
-                }
-                
-                if (newValue !== value) {
-                    value = newValue;
                 }
             }
         }
