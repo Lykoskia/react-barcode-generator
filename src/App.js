@@ -679,14 +679,21 @@ export default function App() {
                 }
             } else if (field === 'reference') {
                 let newValue = value.replace(/[^0-9-]/g, '');
+                let hyphenCount = (newValue.match(/-/g) || []).length;
+                
+                if (hyphenCount <= 2) {
+                    let segments = newValue.split('-');
+                    let processedSegments = segments.map(segment => segment.substring(0, 12));
+                    newValue = processedSegments.join('-');
     
-                let segments = newValue.split('-').map(segment => segment.substring(0, 12));
-                newValue = segments.join('-');
-    
-                if (newValue.length > 22) newValue = newValue.substring(0, 22);
-    
-                newValue = newValue.replace(/^-+|-+$/g, '');
-    
+                    if (newValue.startsWith('-') || newValue.endsWith('-')) {
+                        newValue = newValue.replace(/^-+|-+$/g, '');
+                    }
+                    if (newValue.length > 22) newValue = newValue.substring(0, 22);
+                } else {
+                    return;
+                }
+                
                 if (newValue !== value) {
                     value = newValue;
                 }
