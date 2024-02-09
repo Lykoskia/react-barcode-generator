@@ -670,7 +670,6 @@ export default function App() {
     
         if (section === 'receiver') {
             if (field === 'iban') {
-                // IBAN validation logic remains unchanged
                 const upperValue = value.toUpperCase();
                 const regex = /^HR[0-9]{0,19}$/;
                 if (!regex.test(upperValue) && upperValue !== 'H' && upperValue !== 'HR' && upperValue !== '') {
@@ -680,13 +679,14 @@ export default function App() {
                 }
             } else if (field === 'reference') {
                 let newValue = value.replace(/[^0-9-]/g, '');
-                newValue = newValue.replace(/^-+|-+$|(\d{12})\d+|(-)\1/g, '$1');
+    
+                let segments = newValue.split('-').map(segment => segment.substring(0, 12));
+                newValue = segments.join('-');
+    
                 if (newValue.length > 22) newValue = newValue.substring(0, 22);
     
-                const segments = newValue.split('-');
-                const validSegments = segments.every(segment => segment.length <= 12);
-                if (!validSegments) return;
-                
+                newValue = newValue.replace(/^-+|-+$/g, '');
+    
                 if (newValue !== value) {
                     value = newValue;
                 }
