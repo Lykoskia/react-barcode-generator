@@ -657,7 +657,7 @@ export default function App() {
     const handleInputChange = (arg1, arg2, arg3) => {
         let section, field, value;
         if (arg1 && arg1.target) {
-            const { name, value: inputValue } = arg1.target; // regular React event
+            const { name, value: inputValue } = arg1.target;
             const nameParts = name.split('.');
             section = nameParts[0];
             field = nameParts[1];
@@ -667,10 +667,10 @@ export default function App() {
             field = arg2;
             value = arg3;
         }
-
-        // Adding Reference virtual keyboard input restrictions and refactoring the existing IBAN fix since they are both fields in the Receiver section.
+    
         if (section === 'receiver') {
             if (field === 'iban') {
+                // IBAN validation logic remains unchanged
                 const upperValue = value.toUpperCase();
                 const regex = /^HR[0-9]{0,19}$/;
                 if (!regex.test(upperValue) && upperValue !== 'H' && upperValue !== 'HR' && upperValue !== '') {
@@ -679,19 +679,20 @@ export default function App() {
                     value = upperValue;
                 }
             } else if (field === 'reference') {
-                const newValue = value.replace(/[^0-9-]/g, '');
-                const parts = newValue.split('-');
-                const filteredParts = parts.map((part, index) => 
-                    index === 0 ? part.substring(0, 12) : part.substring(0, 12)
-                ).filter(part => part !== '');
+                let newValue = value.replace(/[^0-9-]/g, '');
+                newValue = newValue.replace(/^-+|-+$|(\d{12})\d+|(-)\1/g, '$1');
+                if (newValue.length > 22) newValue = newValue.substring(0, 22);
     
-                const updatedValue = filteredParts.join('-').substring(0, 22);
-                if (updatedValue !== value) {
-                    value = updatedValue;
+                const segments = newValue.split('-');
+                const validSegments = segments.every(segment => segment.length <= 12);
+                if (!validSegments) return;
+                
+                if (newValue !== value) {
+                    value = newValue;
                 }
             }
         }
-
+    
         setInputData((prevInputData) => {
             if (field) {
                 const updatedSection = { ...prevInputData[section], [field]: value };
