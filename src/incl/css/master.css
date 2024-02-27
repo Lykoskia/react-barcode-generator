@@ -372,13 +372,13 @@ li:hover {
 .toast {
     margin-bottom: 10px;
     padding: 10px;
+    border: 2px solid darkgoldenrod;
     border-radius: 5px;
     background-color: darkred;
-    border: 2px solid darkgoldenrod;
     color: white;
-    transition: transform 1.5s ease-in-out, opacity 1.5s ease;
     transform: translateX(100%);
     opacity: 0;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease;
 }
 
 .toast.show {
@@ -388,20 +388,16 @@ li:hover {
 
 .toast button.dismiss-btn {
     margin-left: auto;
-    color: white;
-    background: none;
-    border: none;
     cursor: pointer;
 }
 
-.container
-{
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.barcode-container
-{
+
+.barcode-container {
     box-sizing: border-box;
     text-align: center;
     padding-top: 20px;
