@@ -985,13 +985,28 @@ export default function App() {
         const id = uuidv4();
         setToasts((prevToasts) => [
             ...prevToasts,
-            { id, content, color }
+            { id, content, color, show: false }
         ]);
+
+        setTimeout(() => {
+            setToasts((prevToasts) =>
+                prevToasts.map((toast) =>
+                    toast.id === id ? { ...toast, show: true } : toast
+                )
+            );
+        }, 10);
 
         toastTimeoutRef.current = setTimeout(() => {
             setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
-        }, 10000);
+        }, 20000);
     };
+
+    /* DISMISS OPTION FOR EACH TOAST */
+
+    const dismissToast = (id) => {
+        setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+    };
+
 
     /* FIELDS IMPORTED FROM URL PARAMS SHOULD BE TREATED AS VISITED
     WHICH MEANS THEY SHOULD BE VALIDATED IMMEDIATELY AFTER BEING IMPORTED */
@@ -1569,8 +1584,14 @@ Poziv na broj
             {/* ERROR TOAST */}
             <div className="toasts-container">
                 {toasts.map((toast) => (
-                    <div key={toast.id} className="toast" style={{ backgroundColor: 'darkred', color: 'white' }}>
+                    <div key={toast.id} className={`toast ${toast.show ? "show" : ""}`} style={{ backgroundColor: 'darkred', color: 'white' }}>
                         {toast.content}
+                        <button
+                            onClick={() => dismissToast(toast.id)}
+                            style={{ marginLeft: 'auto', color: 'white', background: 'none', border: '2px solid goldenrod', padding: '4px' }}
+                        >
+                            X
+                        </button>
                     </div>
                 ))}
             </div>
