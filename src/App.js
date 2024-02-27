@@ -657,7 +657,7 @@ export default function App() {
     const handleInputChange = (arg1, arg2, arg3) => {
         let section, field, value;
         if (arg1 && arg1.target) {
-            const { name, value: inputValue } = arg1.target;
+            const { name, value: inputValue } = arg1.target; // regular React event
             const nameParts = name.split('.');
             section = nameParts[0];
             field = nameParts[1];
@@ -667,7 +667,8 @@ export default function App() {
             field = arg2;
             value = arg3;
         }
-    
+
+        // Adding Reference virtual keyboard input restrictions and refactoring the existing IBAN fix since they are both fields in the Receiver section.
         if (section === 'receiver') {
             if (field === 'iban') {
                 const upperValue = value.toUpperCase();
@@ -677,33 +678,20 @@ export default function App() {
                 } else {
                     value = upperValue;
                 }
-            }
-            if (field === 'reference') {
-                let newValue = value.replace(/[^0-9-]/g, '');
-                let hyphenCount = (newValue.match(/-/g) || []).length;
+            } else if (field === 'reference') {
+                const newValue = value.replace(/[^0-9-]/g, '');
+                const parts = newValue.split('-');
+                const filteredParts = parts.map((part, index) => 
+                    index === 0 ? part.substring(0, 12) : part.substring(0, 12)
+                ).filter(part => part !== '');
     
-                if (hyphenCount <= 2) {
-                    if (newValue.length > 1) {
-                        newValue = newValue.replace(/^-+|-+$/g, '');
-                    }
-    
-                    let segments = newValue.split('-');
-                    let processedSegments = segments.map(segment => {
-                        return segment.substring(0, 12);
-                    });
-    
-                    newValue = processedSegments.join('-');
-                    if (newValue.length > 22) newValue = newValue.substring(0, 22);
-    
-                    if (newValue !== value) {
-                        value = newValue;
-                    }
-                } else {
-                    return;
+                const updatedValue = filteredParts.join('-').substring(0, 22);
+                if (updatedValue !== value) {
+                    value = updatedValue;
                 }
             }
         }
-    
+
         setInputData((prevInputData) => {
             if (field) {
                 const updatedSection = { ...prevInputData[section], [field]: value };
