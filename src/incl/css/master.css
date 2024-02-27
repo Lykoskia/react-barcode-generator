@@ -374,8 +374,9 @@ li:hover {
     padding: 10px;
     border-radius: 5px;
     background-color: darkred;
+    border: 2px solid darkgoldenrod;
     color: white;
-    transition: transform 0.5s ease-in-out, opacity 0.5s ease;
+    transition: transform 1.5s ease-in-out, opacity 1.5s ease;
     transform: translateX(100%);
     opacity: 0;
 }
