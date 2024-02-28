@@ -8,9 +8,8 @@ import {
 } from './Data';
 import './incl/css/master.css';
 
-export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, setGenerateModalIsOpen, selectModalIsOpen, setSelectModalIsOpen, darkMode }) {
+export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, setGenerateModalIsOpen, selectModalIsOpen, setSelectModalIsOpen, showToast, dismissToast, darkMode }) {
 
-    const [toast, setToast] = useState({ message: '', color: '' });
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [selectedBank, setSelectedBank] = useState('');
     const [bankCode, setBankCode] = useState('');
@@ -28,13 +27,6 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
             window.removeEventListener('resize', handleResize);
         };
     }, []);
-
-    /* TOAST AFTER IBAN CALCULATION */
-
-    const showToast = (message, color) => {
-        setToast({ message, color });
-        setTimeout(() => setToast({ message: '', color: '' }), 10000);
-    };
 
     /*
     ************************************************************************************************** 
@@ -72,10 +64,10 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
         const generatedIBAN = generateIBAN(bankCode, accountNumber);
         if (validateIBAN(generatedIBAN)) {
             handleIBANChange(generatedIBAN);
-            showToast(`IBAN: ${generatedIBAN}`, 'green');
+            showToast(`IBAN: ${generatedIBAN} `, 'darkgreen');
             setGenerateModalIsOpen(false);
         } else {
-            showToast('Generirani IBAN je neispravan, provjerite podatke!', 'red');
+            showToast('Generirani IBAN je neispravan, provjerite podatke! ', 'darkred');
         }
     };
 
@@ -122,7 +114,7 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
 
     useEffect(() => {
         if (accountNumber.length === 10 && !isControlDigitValid(accountNumber)) {
-            showToast('Neispravan broj računa!', 'red');
+            showToast('Neispravan broj računa! ', 'darkred');
         }
     }, [accountNumber]);
 
@@ -156,7 +148,7 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                 setIsAccountNumberValid(isControlDigitValid(newValue));
             }
         } else {
-            showToast('Neispravan broj računa!', 'red');
+            showToast('Neispravan broj računa! ', 'darkred');
         }
     };
 
@@ -188,7 +180,7 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
 
     const handleProceedClick = () => {
         handleIBANChange(selectedIBAN);
-        showToast(`IBAN: ${selectedIBAN}`, 'green');
+        showToast(`IBAN: ${selectedIBAN} `, 'darkgreen');
         setSelectModalIsOpen(false);
     };
 
@@ -248,23 +240,6 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
 
     return (
         <React.Fragment>
-            {toast.message && (
-                <div
-                    className={`toast ${darkMode ? 'dark' : 'light'}`}
-                    style={{
-                        position: 'fixed',
-                        bottom: '10px',
-                        right: '10px',
-                        padding: '10px',
-                        margin: '20px',
-                        border: `2px solid ${toast.color}`,
-                        color: toast.color,
-                        backgroundColor: darkMode ? '#222' : '#fafafa',
-                        zIndex: 999
-                    }}>
-                    {toast.message}
-                </div>
-            )}
             <p style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginTop: '0px', marginBottom: '20px' }}>Generirajte ili odaberite IBAN:</p>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
                 <button type="button" onClick={() => setGenerateModalIsOpen(true)}>
