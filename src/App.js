@@ -716,7 +716,7 @@ export default function App() {
         const errorMessage = validateField(field);
 
         if (errorMessage) {
-            showErrorToast(errorMessage, 'red');
+            showToast(errorMessage, 'darkred');
         }
     };
 
@@ -945,6 +945,7 @@ export default function App() {
             delete receiverDataToSave.reference;
             localStorage.setItem(`receiver:${inputData.receiver.name}`, JSON.stringify(receiverDataToSave));
             updateSavedReceivers();
+            showToast('Uspješno spremljen primatelj! ', 'darkgreen');
         }
     };
 
@@ -981,7 +982,7 @@ export default function App() {
 
     /* ERROR TOAST FOR SPECIFIC FIELD IF INVALID ON BLUR */
 
-    const showErrorToast = (content, color) => {
+    const showToast = (content, color) => {
         const id = uuidv4();
         setToasts((prevToasts) => [
             ...prevToasts,
@@ -1584,7 +1585,7 @@ Poziv na broj
             {/* ERROR TOAST */}
             <div className="toasts-container">
                 {toasts.map((toast) => (
-                    <div key={toast.id} className={`toast ${toast.show ? "show" : ""}`} style={{ backgroundColor: 'darkred', color: 'white', boxShadow: '4px 4px 2px black' }}>
+                    <div key={toast.id} className={`toast ${toast.show ? "show" : ""}`} style={{ backgroundColor: toast.color, color: 'white', boxShadow: '4px 4px 2px black' }}>
                         {toast.content}
                         <button
                             onClick={() => dismissToast(toast.id)}
