@@ -1588,7 +1588,7 @@ Poziv na broj
                         {toast.content}
                         <button
                             onClick={() => dismissToast(toast.id)}
-                            style={{ marginLeft: 'auto', color: 'white', background: 'none', border: '2px solid goldenrod', padding: '4px' }}
+                            style={{ marginLeft: 'auto', color: 'white', backgroundColor: 'black', border: '2px solid goldenrod', padding: '4px' }}
                         >
                             X
                         </button>
