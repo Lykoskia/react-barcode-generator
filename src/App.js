@@ -945,7 +945,7 @@ export default function App() {
             delete receiverDataToSave.reference;
             localStorage.setItem(`receiver:${inputData.receiver.name}`, JSON.stringify(receiverDataToSave));
             updateSavedReceivers();
-            showToast('Uspješno spremljen primatelj! ', 'darkblue');
+            showToast('Uspješno spremljen primatelj! ', 'darkgreen');
         }
     };
 
