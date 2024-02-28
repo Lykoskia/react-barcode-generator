@@ -1584,7 +1584,7 @@ Poziv na broj
             {/* ERROR TOAST */}
             <div className="toasts-container">
                 {toasts.map((toast) => (
-                    <div key={toast.id} className={`toast ${toast.show ? "show" : ""}`} style={{ backgroundColor: 'darkred', color: 'white' }}>
+                    <div key={toast.id} className={`toast ${toast.show ? "show" : ""}`} style={{ backgroundColor: 'darkred', color: 'white', boxShadow: '4px 4px 2px black' }}>
                         {toast.content}
                         <button
                             onClick={() => dismissToast(toast.id)}
