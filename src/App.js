@@ -945,7 +945,7 @@ export default function App() {
             delete receiverDataToSave.reference;
             localStorage.setItem(`receiver:${inputData.receiver.name}`, JSON.stringify(receiverDataToSave));
             updateSavedReceivers();
-            showToast('Uspješno spremljen primatelj! ', 'darkgreen');
+            showToast('Uspješno spremljen primatelj! ', 'darkblue');
         }
     };
 
@@ -1324,6 +1324,8 @@ Poziv na broj
                                 setGenerateModalIsOpen={setGenerateModalIsOpen}
                                 selectModalIsOpen={selectModalIsOpen}
                                 setSelectModalIsOpen={setSelectModalIsOpen}
+                                showToast={showToast}
+                                dismissToast={dismissToast}
                                 darkMode={darkMode}
                             />
                             <h2>Uplata</h2>
