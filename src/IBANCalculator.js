@@ -344,9 +344,12 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
                             style={{ flex: 1, marginRight: '10px' }}
                         />
                         <datalist id="services">
-                            {serviceIBANMapping.map(serviceObj => (
-                                <option key={serviceObj.service} value={serviceObj.service} />
-                            ))}
+                            {serviceIBANMapping
+                                .slice()
+                                .sort((a, b) => a.service.localeCompare(b.service))
+                                .map(serviceObj => (
+                                    <option key={serviceObj.service} value={serviceObj.service} />
+                                ))}
                         </datalist>
                         <input
                             type="text"
