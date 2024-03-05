@@ -1005,9 +1005,16 @@ export default function App() {
     /* DISMISS OPTION FOR EACH TOAST */
 
     const dismissToast = (id) => {
-        setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+        setToasts((prevToasts) =>
+            prevToasts.map((toast) =>
+                toast.id === id ? { ...toast, show: false, dismiss: true } : toast
+            )
+        );
+    
+        setTimeout(() => {
+            setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+        }, 500);
     };
-
 
     /* FIELDS IMPORTED FROM URL PARAMS SHOULD BE TREATED AS VISITED
     WHICH MEANS THEY SHOULD BE VALIDATED IMMEDIATELY AFTER BEING IMPORTED */
@@ -1587,7 +1594,7 @@ Poziv na broj
             {/* ERROR TOAST */}
             <div className="toasts-container">
                 {toasts.map((toast) => (
-                    <div key={toast.id} className={`toast ${toast.show ? "show" : ""}`} style={{ backgroundColor: toast.color, color: 'white', boxShadow: '4px 4px 2px black' }}>
+                    <div key={toast.id} className={`toast ${toast.show ? "show" : ""} ${toast.dismiss ? "dismiss" : ""}`} style={{ backgroundColor: toast.color, color: 'white', boxShadow: '4px 4px 2px black' }}>
                         {toast.content}
                         <button
                             onClick={() => dismissToast(toast.id)}
