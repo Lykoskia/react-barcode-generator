@@ -217,7 +217,8 @@ export const serviceIBANMapping = [
     { service: 'Virovitičko-podravska županija',        IBAN: 'HR1423600001800010009' },
     { service: 'Vukovarsko-srijemska županija',         IBAN: 'HR2523900011800016005' },
     { service: 'Zadarska županija',                     IBAN: 'HR4424020061800013007' },
-    { service: 'Zagrebačka županija',                   IBAN: 'HR8623400091800001006' }
+    { service: 'Zagrebačka županija',                   IBAN: 'HR8623400091800001006' },
+    { service: 'RI-19 D.O.O.',                          IBAN: 'HR5824120091342000574' }
 
 ];
 
