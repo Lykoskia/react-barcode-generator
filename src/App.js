@@ -266,44 +266,77 @@ export default function App() {
 
     const [prevInputData, setPrevInputData] = useState(null);
 
-    /* FILL IN SENDER DATA IF COOKIE CONSENT IS GIVEN */
+    /* CONSOLIDATED LOGIC FOR QUERY PARAMS AND COOKIE IMPORTS */
 
     useEffect(() => {
-        const boolCookieConsent = (cookies.cookieConsent === 'true');
-        if (boolCookieConsent) {
-            if (cookies.formData) {
-                try {
-                    const decodedFormData = decodeURIComponent(cookies.formData);
-                    const parsedFormData = JSON.parse(decodedFormData);
-                    if (parsedFormData && parsedFormData.sender) {
-                        setInputData(prevInputData => {
-                            const isNewData = JSON.stringify(prevInputData.sender) !== JSON.stringify(parsedFormData.sender);
-                            if (isNewData) {
-                                return {
-                                    ...prevInputData,
-                                    sender: {
-                                        name: parsedFormData.sender.name,
-                                        street: parsedFormData.sender.street,
-                                        postcode: parsedFormData.sender.postcode,
-                                        city: parsedFormData.sender.city,
-                                        place: parsedFormData.sender.place
-                                    }
-                                };
+        const searchParams = new URLSearchParams(location.search);
+        let fieldsToUpdate = [];
+    
+        searchParams.forEach((value, key) => {
+            const keyParts = key.split(".");
+            if (keyParts.length === 2) {
+                let [section, field] = keyParts;
+                setInputData(prevInputData => {
+                    if (typeof prevInputData[section] === 'object' && prevInputData[section] !== null) {
+                        return {
+                            ...prevInputData,
+                            [section]: {
+                                ...prevInputData[section],
+                                [field]: field === 'amount' ? parseFloat(value).toString() : value
                             }
-                            return prevInputData;
-                        });
-                        setImportedSender(true);
+                        };
                     }
-                } catch (error) {
-                    console.error('Error parsing formData:', error);
-                }
+                    return prevInputData;
+                });
+                fieldsToUpdate.push(`${section}.${field}`);
+            } else if (keyParts.length === 1) {
+                let field = keyParts[0];
+                setInputData(prevInputData => {
+                    return {
+                        ...prevInputData,
+                        [field]: field === 'amount' ? parseFloat(value).toString() : value
+                    };
+                });
+                fieldsToUpdate.push(field);
             }
-        } else if (cookies.cookieConsent === 'false') {
-            removeCookie('formData');
-        } else {
-            setShowCookieConsent(true);
+        });
+    
+        setVisited(prevVisited => {
+            let newVisited = { ...prevVisited };
+            fieldsToUpdate.forEach(field => {
+                newVisited[field] = true;
+            });
+            return newVisited;
+        });
+    
+        if (fieldsToUpdate.length === 0 && cookies.formData && (cookies.cookieConsent === 'true' || cookies.cookieConsent === true)) {
+            try {
+                const decodedFormData = decodeURIComponent(cookies.formData);
+                const parsedFormData = JSON.parse(decodedFormData);
+                if (parsedFormData && parsedFormData.sender) {
+                    setInputData(prevInputData => ({
+                        ...prevInputData,
+                        sender: {
+                            ...prevInputData.sender,
+                            ...parsedFormData.sender,
+                        }
+                    }));
+                    fieldsToUpdate = Object.keys(parsedFormData.sender).map(key => `sender.${key}`);
+                }
+            } catch (error) {
+                console.error('Error parsing formData:', error);
+            }
         }
-    }, [cookies.formData, cookies.cookieConsent, inputData]);
+    
+        if (fieldsToUpdate.length === 0) {
+            if (cookies.cookieConsent === 'false') {
+                removeCookie('formData');
+            } else if (cookies.cookieConsent !== 'true') {
+                setShowCookieConsent(true);
+            }
+        }
+    
+    }, [location.search, cookies.formData, cookies.cookieConsent]);
 
     const handleAcceptCookies = () => {
         setCookie('cookieConsent', true, { path: '/', maxAge: 365 * 24 * 60 * 60 });
@@ -1015,51 +1048,6 @@ export default function App() {
             setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
         }, 500);
     };
-
-    /* FIELDS IMPORTED FROM URL PARAMS SHOULD BE TREATED AS VISITED
-    WHICH MEANS THEY SHOULD BE VALIDATED IMMEDIATELY AFTER BEING IMPORTED */
-
-    const location = useLocation();
-    useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        const fieldsToUpdate = [];
-
-        searchParams.forEach((value, key) => {
-            const keyParts = key.split(".");
-            if (keyParts.length === 2) {
-                let [section, field] = keyParts;
-                setInputData(prevInputData => {
-                    if (typeof prevInputData[section] === 'object' && prevInputData[section] !== null) {
-                        return {
-                            ...prevInputData,
-                            [section]: {
-                                ...prevInputData[section],
-                                [field]: field === 'amount' ? parseFloat(value).toString() : value
-                            }
-                        };
-                    }
-                });
-                fieldsToUpdate.push(`${section}.${field}`);
-            } else if (keyParts.length === 1) {
-                let field = keyParts[0];
-                setInputData(prevInputData => {
-                    return {
-                        ...prevInputData,
-                        [field]: value
-                    };
-                });
-                fieldsToUpdate.push(field);
-            }
-        });
-
-        setVisited(prevVisited => {
-            let newVisited = { ...prevVisited };
-            fieldsToUpdate.forEach(field => {
-                newVisited[field] = true;
-            });
-            return newVisited;
-        });
-    }, [location.search]);
 
     const displayQueryParams = () => {
         const queryParams = `{
