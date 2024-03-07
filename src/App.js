@@ -269,6 +269,7 @@ export default function App() {
     /* CONSOLIDATED LOGIC FOR QUERY PARAMS AND COOKIE IMPORTS */
 
     useEffect(() => {
+        const location = useLocation();
         const searchParams = new URLSearchParams(location.search);
         let fieldsToUpdate = [];
     
