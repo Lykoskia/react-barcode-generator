@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AutoNumeric from 'autonumeric';
 
 export default function AmountInput({ handleInputChange, inputData, visited, errors, handleBlur }) {
     const inputRef = useRef(null);
     const autoNumericInstance = useRef(null);
-    const autoNumericValue = useRef(inputData.amount || 0);
+    const [lastExternalValue, setLastExternalValue] = useState(inputData.amount || 0);
 
     useEffect(() => {
         if (inputRef.current && !autoNumericInstance.current) {
@@ -18,19 +18,17 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
                 unformatOnSubmit: true
             });
 
-            autoNumericInstance.current.set(autoNumericValue.current);
+            autoNumericInstance.current.set(inputData.amount || 0);
 
-            const changeHandler = (e) => {
-                autoNumericValue.current = autoNumericInstance.current.getNumericString();
-                handleInputChange('amount', autoNumericValue.current);
+            const changeHandler = () => {
+                const newValue = autoNumericInstance.current.getNumericString();
+                handleInputChange('amount', newValue);
             };
 
             inputRef.current.addEventListener('autoNumeric:rawValueModified', changeHandler);
 
             return () => {
-                if (inputRef.current) {
-                    inputRef.current.removeEventListener('autoNumeric:rawValueModified', changeHandler);
-                }
+                inputRef.current.removeEventListener('autoNumeric:rawValueModified', changeHandler);
                 if (autoNumericInstance.current) {
                     autoNumericInstance.current.remove();
                 }
@@ -40,11 +38,11 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
 
     useEffect(() => {
         const newAmount = inputData.amount || 0;
-        if (autoNumericInstance.current && autoNumericValue.current !== newAmount) {
+        if (autoNumericInstance.current && lastExternalValue !== newAmount) {
             autoNumericInstance.current.set(newAmount);
-            autoNumericValue.current = newAmount;
+            setLastExternalValue(newAmount);
         }
-    }, [inputData.amount]);
+    }, [inputData.amount, lastExternalValue]);
 
     return (
         <input
