@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import AutoNumeric from 'autonumeric';
 
 export default function AmountInput({ handleInputChange, inputData, visited, errors, handleBlur }) {
-
     const inputRef = useRef(null);
     const autoNumericInstance = useRef(null);
     const manualInputChange = useRef(false);
@@ -21,15 +20,17 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
 
             autoNumericInstance.current.set(inputData.amount || 0);
 
-            inputRef.current.addEventListener('autoNumeric:rawValueModified', (e) => {
+            const changeHandler = (e) => {
                 manualInputChange.current = true;
-                handleInputChange('amount', autoNumericInstance.current.getFormattedValue());
-            });
+                handleInputChange('amount', autoNumericInstance.current.getNumericString());
+            };
+
+            inputRef.current.addEventListener('autoNumeric:rawValueModified', changeHandler);
         }
 
         return () => {
             if (inputRef.current) {
-                inputRef.current.removeEventListener('autoNumeric:rawValueModified');
+                inputRef.current.removeEventListener('autoNumeric:rawValueModified', changeHandler);
             }
             if (autoNumericInstance.current) {
                 autoNumericInstance.current.remove();
@@ -38,7 +39,7 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
     }, []);
 
     useEffect(() => {
-        if (autoNumericInstance.current && !manualInputChange.current) {
+        if (autoNumericInstance.current && (!manualInputChange.current || inputData.amount === '')) {
             autoNumericInstance.current.set(inputData.amount || 0);
         }
         manualInputChange.current = false;
