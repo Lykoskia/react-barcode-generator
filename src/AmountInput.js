@@ -4,7 +4,7 @@ import AutoNumeric from 'autonumeric';
 export default function AmountInput({ handleInputChange, inputData, visited, errors, handleBlur }) {
     const inputRef = useRef(null);
     const autoNumericInstance = useRef(null);
-    const [lastExternalValue, setLastExternalValue] = useState(inputData.amount || 0);
+    const [isUserInteraction, setIsUserInteraction] = useState(false);
 
     useEffect(() => {
         if (inputRef.current && !autoNumericInstance.current) {
@@ -21,8 +21,8 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
             autoNumericInstance.current.set(inputData.amount || 0);
 
             const changeHandler = () => {
-                const newValue = autoNumericInstance.current.getNumericString();
-                handleInputChange('amount', newValue);
+                setIsUserInteraction(true);
+                handleInputChange('amount', autoNumericInstance.current.getNumericString());
             };
 
             inputRef.current.addEventListener('autoNumeric:rawValueModified', changeHandler);
@@ -37,12 +37,11 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
     }, []);
 
     useEffect(() => {
-        const newAmount = inputData.amount || 0;
-        if (autoNumericInstance.current && lastExternalValue !== newAmount) {
-            autoNumericInstance.current.set(newAmount);
-            setLastExternalValue(newAmount);
+        if (autoNumericInstance.current && !isUserInteraction) {
+            autoNumericInstance.current.set(inputData.amount || 0);
         }
-    }, [inputData.amount, lastExternalValue]);
+        setIsUserInteraction(false);
+    }, [inputData.amount, isUserInteraction]);
 
     return (
         <input
