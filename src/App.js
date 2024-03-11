@@ -1042,11 +1042,11 @@ export default function App() {
             const keyParts = key.split(".");
             if (keyParts.length === 2) {
                 let [section, field] = keyParts;
+                if (!urlInputData[section] && section !== 'amount') {
+                    urlInputData[section] = {};
+                }
                 if (field === 'amount') {
                     value = value.replace(/\./g, '').replace(',', '.');
-                }
-                if (!urlInputData[section]) {
-                    urlInputData[section] = {};
                 }
                 if (urlInputData[section][field] !== value) {
                     urlInputData[section][field] = value;
@@ -1066,11 +1066,7 @@ export default function App() {
             setVisited((prevVisited) => {
                 let newVisited = { ...prevVisited };
                 for (let key of searchParams.keys()) {
-                    if (key.includes('.')) {
-                        newVisited[key] = true;
-                    } else {
-                        newVisited[key] = true;
-                    }
+                    newVisited[key] = true;
                 }
                 return newVisited;
             });
