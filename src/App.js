@@ -682,6 +682,10 @@ export default function App() {
             value = arg3;
         }
 
+        if (field === 'amount') {
+            value = value.toString().replace(/\./g, '').replace(/,/g, '.');
+        }
+
         setInputData((prevInputData) => {
             if (field) {
                 const updatedSection = { ...prevInputData[section], [field]: value };
