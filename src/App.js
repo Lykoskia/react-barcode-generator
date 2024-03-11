@@ -1045,14 +1045,17 @@ export default function App() {
                 if (field === 'amount') {
                     value = value.replace(/\./g, '').replace(',', '.');
                 }
+                if (!urlInputData[section]) {
+                    urlInputData[section] = {};
+                }
                 if (urlInputData[section][field] !== value) {
                     urlInputData[section][field] = value;
                     shouldUpdateState = true;
                 }
-            } else if (keyParts.length === 1 && keyParts[0] === 'amount') {
-                value = value.replace(/\./g, '').replace(',', '.');
-                if (urlInputData[keyParts[0]] !== value) {
-                    urlInputData[keyParts[0]] = value;
+            } else {
+                value = key === 'amount' ? value.replace(/\./g, '').replace(',', '.') : value;
+                if (urlInputData[key] !== value) {
+                    urlInputData[key] = value;
                     shouldUpdateState = true;
                 }
             }
@@ -1061,16 +1064,14 @@ export default function App() {
         if (shouldUpdateState) {
             setInputData(urlInputData);
             setVisited((prevVisited) => {
-                let newVisited = {...prevVisited};
-                Object.keys(urlInputData).forEach((key) => {
-                    if (typeof urlInputData[key] === 'object') {
-                        Object.keys(urlInputData[key]).forEach((subKey) => {
-                            newVisited[`${key}.${subKey}`] = true;
-                        });
+                let newVisited = { ...prevVisited };
+                for (let key of searchParams.keys()) {
+                    if (key.includes('.')) {
+                        newVisited[key] = true;
                     } else {
                         newVisited[key] = true;
                     }
-                });
+                }
                 return newVisited;
             });
         }
