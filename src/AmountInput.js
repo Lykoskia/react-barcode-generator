@@ -4,10 +4,10 @@ import AutoNumeric from 'autonumeric';
 export default function AmountInput({ handleInputChange, inputData, visited, errors, handleBlur }) {
     const inputRef = useRef(null);
     const autoNumericInstance = useRef(null);
-    const manualInputChange = useRef(false);
+    const autoNumericValue = useRef(inputData.amount || 0);
 
     useEffect(() => {
-        if (inputRef.current) {
+        if (inputRef.current && !autoNumericInstance.current) {
             autoNumericInstance.current = new AutoNumeric(inputRef.current, {
                 decimalCharacter: ',',
                 digitGroupSeparator: '.',
@@ -18,11 +18,11 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
                 unformatOnSubmit: true
             });
 
-            autoNumericInstance.current.set(inputData.amount || 0);
+            autoNumericInstance.current.set(autoNumericValue.current);
 
             const changeHandler = (e) => {
-                manualInputChange.current = true;
-                handleInputChange('amount', autoNumericInstance.current.getNumericString());
+                autoNumericValue.current = autoNumericInstance.current.getNumericString();
+                handleInputChange('amount', autoNumericValue.current);
             };
 
             inputRef.current.addEventListener('autoNumeric:rawValueModified', changeHandler);
@@ -39,10 +39,11 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
     }, []);
 
     useEffect(() => {
-        if (autoNumericInstance.current && !manualInputChange.current) {
-            autoNumericInstance.current.set(inputData.amount || 0);
+        const newAmount = inputData.amount || 0;
+        if (autoNumericInstance.current && autoNumericValue.current !== newAmount) {
+            autoNumericInstance.current.set(newAmount);
+            autoNumericValue.current = newAmount;
         }
-        manualInputChange.current = false;
     }, [inputData.amount]);
 
     return (
