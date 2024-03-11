@@ -1035,33 +1035,40 @@ export default function App() {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
-        let fieldsToUpdate = [];
+        let fieldsToUpdate = {};
     
         searchParams.forEach((value, key) => {
             const keyParts = key.split(".");
             if (keyParts.length === 2) {
                 let [section, field] = keyParts;
+                let fieldValue = value;
+                if (field === 'amount') {
+                    fieldValue = fieldValue.replace(/\./g, '').replace(',', '.');
+                }
                 setInputData(prevInputData => ({
                     ...prevInputData,
                     [section]: {
                         ...prevInputData[section],
-                        [field]: field === 'amount' ? parseFloat(value).toString() : value,
+                        [field]: fieldValue,
                     },
                 }));
-                fieldsToUpdate.push(`${section}.${field}`);
+                fieldsToUpdate[`${section}.${field}`] = true;
             } else if (keyParts.length === 1) {
-                let field = keyParts[0];
+                let fieldValue = value;
+                if (keyParts[0] === 'amount') {
+                    fieldValue = fieldValue.replace(/\./g, '').replace(',', '.');
+                }
                 setInputData(prevInputData => ({
                     ...prevInputData,
-                    [field]: field === 'amount' ? parseFloat(value).toString() : value,
+                    [keyParts[0]]: fieldValue,
                 }));
-                fieldsToUpdate.push(field);
+                fieldsToUpdate[keyParts[0]] = true;
             }
         });
     
         setVisited(prevVisited => ({
             ...prevVisited,
-            ...fieldsToUpdate.reduce((acc, field) => ({ ...acc, [field]: true }), {}),
+            ...fieldsToUpdate,
         }));
     }, [location.search]);
 
