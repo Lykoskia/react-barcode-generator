@@ -4,62 +4,58 @@ import AutoNumeric from 'autonumeric';
 export default function AmountInput({ handleInputChange, inputData, visited, errors, handleBlur }) {
 
     const inputRef = useRef(null);
-    
-    useEffect(() => {
-        const currentRef = inputRef.current;
-        let autoNumericInstance;
+    const autoNumericInstance = useRef(null);
 
-        if (currentRef) {
-            autoNumericInstance = new AutoNumeric(currentRef, {
+    useEffect(() => {
+        if (inputRef.current) {
+            autoNumericInstance.current = new AutoNumeric(inputRef.current, {
                 decimalCharacter: ',',
                 digitGroupSeparator: '.',
                 decimalPlaces: 2,
                 maximumValue: '999999.99',
                 minimumValue: '0',
-                modifyValueOnWheel: false
+                modifyValueOnWheel: false,
+                unformatOnSubmit: true
             });
 
-            const urlParams = new URLSearchParams(window.location.search);
-            let amountFromURL = urlParams.get('amount');
-    
-            if (amountFromURL) {
-                let numericAmount = Number(amountFromURL) / 100;
-                let formattedAmount = numericAmount.toLocaleString('hr-HR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-    
-                autoNumericInstance.set(formattedAmount);
-                handleInputChange('inputData', 'amount', formattedAmount);
-    
-                setTimeout(() => {
-                    if (inputRef && inputRef.current) {
-                        inputRef.current.focus();
-                        inputRef.current.blur();
-                    }
-                }, 1000);
-            }
+            autoNumericInstance.current.set(inputData.amount || 0);
+
+            inputRef.current.addEventListener('autoNumeric:rawValueModified', (e) => {
+                handleInputChange('amount', autoNumericInstance.current.getFormattedValue());
+            });
         }
-    
+
         return () => {
-            if (autoNumericInstance) {
-                autoNumericInstance.remove();
+            if (inputRef.current) {
+                inputRef.current.removeEventListener('autoNumeric:rawValueModified');
+            }
+            if (autoNumericInstance.current) {
+                autoNumericInstance.current.remove();
             }
         };
     }, []);
-    
+
+    useEffect(() => {
+        if (autoNumericInstance.current) {
+            autoNumericInstance.current.set(inputData.amount || 0);
+        }
+    }, [inputData.amount]);
+
     return (
         <input
-            type="text"
             ref={inputRef}
             id="payment_amount"
             name="amount"
-            value={inputData.amount}
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
-            onChange={handleInputChange}
-            onBlur={() => handleBlur('amount')}
+            defaultValue={inputData.amount}
+            onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleBlur('amount');
+                }
+            }}
             placeholder="max 999.999,99"
-            maxLength={8}
+            maxLength={10}
         />
     );
 }
