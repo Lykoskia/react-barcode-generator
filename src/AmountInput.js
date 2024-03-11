@@ -44,7 +44,6 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
             id="payment_amount"
             name="amount"
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
-            onChange={(e) => handleInputChange('amount', e.target.value)}
             onBlur={() => handleBlur('amount')}
             placeholder="max 999.999,99"
             maxLength={10}
