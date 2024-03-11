@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import AutoNumeric from 'autonumeric';
 
 export default function AmountInput({ handleInputChange, inputData, visited, errors, handleBlur }) {
     const inputRef = useRef(null);
     const autoNumericInstance = useRef(null);
-    const [isUserInteraction, setIsUserInteraction] = useState(false);
 
     useEffect(() => {
         if (inputRef.current && !autoNumericInstance.current) {
@@ -18,10 +17,7 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
                 unformatOnSubmit: true
             });
 
-            autoNumericInstance.current.set(inputData.amount || 0);
-
             const changeHandler = () => {
-                setIsUserInteraction(true);
                 handleInputChange('amount', autoNumericInstance.current.getNumericString());
             };
 
@@ -37,11 +33,10 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
     }, []);
 
     useEffect(() => {
-        if (autoNumericInstance.current && !isUserInteraction) {
+        if (autoNumericInstance.current) {
             autoNumericInstance.current.set(inputData.amount || 0);
         }
-        setIsUserInteraction(false);
-    }, [inputData.amount, isUserInteraction]);
+    }, [inputData.amount]);
 
     return (
         <input
@@ -49,13 +44,9 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
             id="payment_amount"
             name="amount"
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
-            defaultValue={inputData.amount}
-            onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleBlur('amount');
-                }
-            }}
+            value={inputData.amount}
+            onChange={(e) => handleInputChange('amount', e.target.value)}
+            onBlur={() => handleBlur('amount')}
             placeholder="max 999.999,99"
             maxLength={10}
         />
