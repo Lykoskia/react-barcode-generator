@@ -1035,41 +1035,45 @@ export default function App() {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
-        let fieldsToUpdate = {};
+        let urlInputData = { ...inputData };
+        let shouldUpdateState = false;
     
         searchParams.forEach((value, key) => {
             const keyParts = key.split(".");
             if (keyParts.length === 2) {
                 let [section, field] = keyParts;
-                let fieldValue = value;
                 if (field === 'amount') {
-                    fieldValue = fieldValue.replace(/\./g, '').replace(',', '.');
+                    value = value.replace(/\./g, '').replace(',', '.');
                 }
-                setInputData(prevInputData => ({
-                    ...prevInputData,
-                    [section]: {
-                        ...prevInputData[section],
-                        [field]: fieldValue,
-                    },
-                }));
-                fieldsToUpdate[`${section}.${field}`] = true;
-            } else if (keyParts.length === 1) {
-                let fieldValue = value;
-                if (keyParts[0] === 'amount') {
-                    fieldValue = fieldValue.replace(/\./g, '').replace(',', '.');
+                if (urlInputData[section][field] !== value) {
+                    urlInputData[section][field] = value;
+                    shouldUpdateState = true;
                 }
-                setInputData(prevInputData => ({
-                    ...prevInputData,
-                    [keyParts[0]]: fieldValue,
-                }));
-                fieldsToUpdate[keyParts[0]] = true;
+            } else if (keyParts.length === 1 && keyParts[0] === 'amount') {
+                value = value.replace(/\./g, '').replace(',', '.');
+                if (urlInputData[keyParts[0]] !== value) {
+                    urlInputData[keyParts[0]] = value;
+                    shouldUpdateState = true;
+                }
             }
         });
     
-        setVisited(prevVisited => ({
-            ...prevVisited,
-            ...fieldsToUpdate,
-        }));
+        if (shouldUpdateState) {
+            setInputData(urlInputData);
+            setVisited((prevVisited) => {
+                let newVisited = {...prevVisited};
+                Object.keys(urlInputData).forEach((key) => {
+                    if (typeof urlInputData[key] === 'object') {
+                        Object.keys(urlInputData[key]).forEach((subKey) => {
+                            newVisited[`${key}.${subKey}`] = true;
+                        });
+                    } else {
+                        newVisited[key] = true;
+                    }
+                });
+                return newVisited;
+            });
+        }
     }, [location.search]);
 
     const displayQueryParams = () => {
