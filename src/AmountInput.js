@@ -26,20 +26,20 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
             };
 
             inputRef.current.addEventListener('autoNumeric:rawValueModified', changeHandler);
-        }
 
-        return () => {
-            if (inputRef.current) {
-                inputRef.current.removeEventListener('autoNumeric:rawValueModified', changeHandler);
-            }
-            if (autoNumericInstance.current) {
-                autoNumericInstance.current.remove();
-            }
-        };
+            return () => {
+                if (inputRef.current) {
+                    inputRef.current.removeEventListener('autoNumeric:rawValueModified', changeHandler);
+                }
+                if (autoNumericInstance.current) {
+                    autoNumericInstance.current.remove();
+                }
+            };
+        }
     }, []);
 
     useEffect(() => {
-        if (autoNumericInstance.current && (!manualInputChange.current || inputData.amount === '')) {
+        if (autoNumericInstance.current && !manualInputChange.current) {
             autoNumericInstance.current.set(inputData.amount || 0);
         }
         manualInputChange.current = false;
