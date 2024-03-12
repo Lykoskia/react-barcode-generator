@@ -30,7 +30,7 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
                 });
     
                 autoNumericInstance.set(formattedAmount);
-                handleInputChange('inputData', 'amount', formattedAmount);
+                handleInputChange('amount', undefined, formattedAmount);
     
                 setTimeout(() => {
                     if (inputRef && inputRef.current) {
