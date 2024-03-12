@@ -1382,6 +1382,7 @@ Poziv na broj
                                     <AmountInput
                                         visited={visited}
                                         errors={errors}
+                                        value={inputData.amount}
                                         handleValueChange={handleAmountChange}
                                         handleBlur={handleBlur}
                                     />
