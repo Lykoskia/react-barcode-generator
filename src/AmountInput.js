@@ -5,7 +5,7 @@ export default function AmountInput({ value, handleValueChange, visited, errors,
   
     const onValueChange = (values) => {
         const { formattedValue, floatValue } = values;
-        handleAmountChange(floatValue, formattedValue);
+        handleValueChange('amount', floatValue, formattedValue);
     };
 
     return (
