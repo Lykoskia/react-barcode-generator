@@ -33,9 +33,12 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
     }, []);
 
     useEffect(() => {
-        if (autoNumericInstance.current) {
-            autoNumericInstance.current.set(inputData.amount || 0);
+      if (autoNumericInstance.current) {
+        const numericValue = autoNumericInstance.current.getNumericString();
+        if (inputData.amount !== numericValue) {
+          autoNumericInstance.current.set(inputData.amount || 0);
         }
+      }
     }, [inputData.amount]);
 
     return (
