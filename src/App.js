@@ -721,6 +721,13 @@ export default function App() {
         });
     };
 
+    /* REACT NUMBER FORMAT FUNCTION FOR HANDLING CHANGES TO THE AMOUNT FIELD IN THE PARENT COMPONENT */
+
+    const handleAmountChange = (field, formattedValue) => {
+        const numericValue = formattedValue ? parseFloat(formattedValue.replace(/\./g, '').replace(',', '.')) : 0;
+        handleInputChange('amount', undefined, numericValue);
+    };
+
     /* SET FIELD TO VISITED AFTER LOSING FOCUS
     VALIDATE FIELD UPON LEAVING IT */
 
@@ -1375,8 +1382,7 @@ Poziv na broj
                                     <AmountInput
                                         visited={visited}
                                         errors={errors}
-                                        inputData={inputData}
-                                        handleInputChange={handleInputChange}
+                                        handleValueChange={handleAmountChange}
                                         handleBlur={handleBlur}
                                     />
                                 </div>
