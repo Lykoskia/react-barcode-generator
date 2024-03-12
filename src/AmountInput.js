@@ -16,9 +16,11 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
                 modifyValueOnWheel: false,
                 unformatOnSubmit: true
             });
-
+            
             const changeHandler = () => {
-                handleInputChange('amount', autoNumericInstance.current.getNumericString());
+                const numericString = autoNumericInstance.current.getNumericString();
+                console.log(`AmountInput changeHandler called with value: ${numericString}`);
+                handleInputChange('amount', numericString);
             };
 
             inputRef.current.addEventListener('autoNumeric:rawValueModified', changeHandler);
@@ -34,6 +36,7 @@ export default function AmountInput({ handleInputChange, inputData, visited, err
 
     useEffect(() => {
       if (autoNumericInstance.current) {
+        console.log(`Setting AutoNumeric value to: ${inputData.amount}`);
         const numericValue = autoNumericInstance.current.getNumericString();
         if (inputData.amount !== numericValue) {
           autoNumericInstance.current.set(inputData.amount || 0);
