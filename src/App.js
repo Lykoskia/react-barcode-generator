@@ -1048,41 +1048,21 @@ export default function App() {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         let urlInputData = { ...inputData };
-        let shouldUpdateState = false;
     
-        searchParams.forEach((value, key) => {
-            const keyParts = key.split(".");
-            if (keyParts.length === 2) {
-                let [section, field] = keyParts;
-                if (!urlInputData[section] && section !== 'amount') {
-                    urlInputData[section] = {};
+        for (let [key, value] of searchParams) {
+            const keys = key.split('.');
+            if (keys.length === 1) {
+                urlInputData[keys[0]] = value;
+            } else if (keys.length === 2) {
+                if (!urlInputData[keys[0]]) {
+                    urlInputData[keys[0]] = {};
                 }
-                if (field === 'amount') {
-                    value = value.replace(/\./g, '').replace(',', '.');
-                }
-                if (urlInputData[section][field] !== value) {
-                    urlInputData[section][field] = value;
-                    shouldUpdateState = true;
-                }
-            } else {
-                value = key === 'amount' ? value.replace(/\./g, '').replace(',', '.') : value;
-                if (urlInputData[key] !== value) {
-                    urlInputData[key] = value;
-                    shouldUpdateState = true;
-                }
+                urlInputData[keys[0]][keys[1]] = value;
             }
-        });
-    
-        if (shouldUpdateState) {
-            setInputData(urlInputData);
-            setVisited((prevVisited) => {
-                let newVisited = { ...prevVisited };
-                for (let key of searchParams.keys()) {
-                    newVisited[key] = true;
-                }
-                return newVisited;
-            });
         }
+    
+        setInputData(urlInputData);
+        setVisited(prev => ({ ...prev, ...Object.fromEntries(searchParams.keys().map(k => [k, true])) }));
     }, [location.search]);
 
     const displayQueryParams = () => {
