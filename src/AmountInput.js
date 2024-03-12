@@ -4,8 +4,8 @@ import { NumericFormat } from 'react-number-format';
 export default function AmountInput({ value, handleValueChange, visited, errors, handleBlur }) {
   
     const onValueChange = (values) => {
-        const { formattedValue, floatValue } = values;
-        handleValueChange('amount', floatValue, formattedValue);
+        const { formattedValue } = values;
+        handleValueChange(formattedValue);
     };
 
     return (
