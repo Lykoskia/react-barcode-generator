@@ -13,6 +13,9 @@ export default function AmountInput({ handleValueChange, visited, errors, handle
             thousandSeparator="."
             decimalSeparator=","
             isNumericString
+            fixedDecimalScale={true}
+            decimalScale={2}
+            value={value} 
             onValueChange={onValueChange}
             onBlur={() => handleBlur('amount')}
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
