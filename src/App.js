@@ -723,11 +723,10 @@ export default function App() {
 
     /* REACT NUMBER FORMAT FUNCTION FOR HANDLING CHANGES TO THE AMOUNT FIELD IN THE PARENT COMPONENT */
     
-    const handleAmountChange = (numericValue, formattedValue) => {
+    const handleAmountChange = (formattedValue) => {
         setInputData(prevInputData => ({
             ...prevInputData,
-            amount: numericValue,
-            formattedAmount: formattedValue
+            amount: formattedValue
         }));
     };
 
