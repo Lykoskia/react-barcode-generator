@@ -669,6 +669,7 @@ export default function App() {
     /* ONCHANGE LOGIC THAT DEALS WITH REGULAR REACT EVENTS AND NESTED OBJECTS */
 
     const handleInputChange = (arg1, arg2, arg3) => {
+        console.log(`handleInputChange called with: section=${arg1}, field=${arg2}, value=${arg3}`);
         let section, field, value;
         if (arg1 && arg1.target) {
             const { name, value: inputValue } = arg1.target; // regular React event
