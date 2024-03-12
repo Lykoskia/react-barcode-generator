@@ -672,6 +672,7 @@ export default function App() {
         let section, field, value;
         if (arg1 && arg1.target) {
             const { name, value: inputValue } = arg1.target; // regular React event
+            console.log(`Event change: name=${name}, value=${inputValue}`);
             const nameParts = name.split('.');
             section = nameParts[0];
             field = nameParts[1];
@@ -680,6 +681,7 @@ export default function App() {
             section = arg1;
             field = arg2;
             value = arg3;
+            console.log(`Manual change: section=${section}, field=${field}, value=${value}`);
         }
 
         setInputData((prevInputData) => {
