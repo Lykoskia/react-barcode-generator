@@ -682,7 +682,7 @@ export default function App() {
             value = arg3;
         }
 
-        if (field === 'amount') {
+        if (value === 'amount') {
             value = value.toString().replace(/\./g, '').replace(/,/g, '.');
         }
 
