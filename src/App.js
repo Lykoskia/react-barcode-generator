@@ -105,7 +105,7 @@ export default function App() {
     /* FORMAT THE DATA ACCORDING TO THE HUB3 SPECIFICATION */
 
     const formatHUB3Data = (data) => {
-        const amountString = data.amount.toString().padStart(15, '0');
+        const amountString = data.amount.replace(/\./g, '').replace(',', '').padStart(15, '0');
 
         return [
             'HRVHUB30',
