@@ -1,5 +1,5 @@
 import React from 'react';
-import { NumberFormat } from 'react-number-format';
+import { NumericFormat } from 'react-number-format';
 
 export default function AmountInput({ handleValueChange, visited, errors, handleBlur }) {
   
@@ -21,7 +21,7 @@ export default function AmountInput({ handleValueChange, visited, errors, handle
   };
 
   return (
-    <NumberFormat
+    <NumericFormat
       thousandSeparator="."
       decimalSeparator=","
       isNumericString
