@@ -722,16 +722,13 @@ export default function App() {
     };
 
     /* REACT NUMBER FORMAT FUNCTION FOR HANDLING CHANGES TO THE AMOUNT FIELD IN THE PARENT COMPONENT */
-
-    const handleAmountChange = (field, numericValue, formattedValue) => {
-        setInputData(prevInputData => {
-            const updatedInputData = {
-                ...prevInputData,
-                [field]: numericValue.toString(),
-                formattedAmount: formattedValue
-            };
-            return updatedInputData;
-        });
+    
+    const handleAmountChange = (numericValue, formattedValue) => {
+        setInputData(prevInputData => ({
+            ...prevInputData,
+            amount: numericValue,
+            formattedAmount: formattedValue
+        }));
     };
 
     /* SET FIELD TO VISITED AFTER LOSING FOCUS
