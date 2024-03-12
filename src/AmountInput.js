@@ -14,7 +14,6 @@ export default function AmountInput({ handleValueChange, visited, errors, handle
             decimalSeparator=","
             isNumericString
             onValueChange={onValueChange}
-            format={croatianNumberFormatter}
             onBlur={() => handleBlur('amount')}
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
             placeholder="max 999.999,99"
