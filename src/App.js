@@ -723,9 +723,15 @@ export default function App() {
 
     /* REACT NUMBER FORMAT FUNCTION FOR HANDLING CHANGES TO THE AMOUNT FIELD IN THE PARENT COMPONENT */
 
-    const handleAmountChange = (field, formattedValue) => {
-        const numericValue = formattedValue ? parseFloat(formattedValue.replace(/\./g, '').replace(',', '.')) : 0;
-        handleInputChange('amount', undefined, numericValue);
+    const handleAmountChange = (field, numericValue, formattedValue) => {
+        setInputData(prevInputData => {
+            const updatedInputData = {
+                ...prevInputData,
+                [field]: numericValue.toString(),
+                formattedAmount: formattedValue
+            };
+            return updatedInputData;
+        });
     };
 
     /* SET FIELD TO VISITED AFTER LOSING FOCUS
