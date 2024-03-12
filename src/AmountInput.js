@@ -1,65 +1,27 @@
-import React, { useEffect, useRef } from 'react';
-import AutoNumeric from 'autonumeric';
+import { NumericFormat } from 'react-number-format';
 
-export default function AmountInput({ handleInputChange, inputData, visited, errors, handleBlur }) {
-
-    const inputRef = useRef(null);
-    
-    useEffect(() => {
-        const currentRef = inputRef.current;
-        let autoNumericInstance;
-
-        if (currentRef) {
-            autoNumericInstance = new AutoNumeric(currentRef, {
-                decimalCharacter: ',',
-                digitGroupSeparator: '.',
-                decimalPlaces: 2,
-                maximumValue: '999999.99',
-                minimumValue: '0',
-                modifyValueOnWheel: false
-            });
-
-            const urlParams = new URLSearchParams(window.location.search);
-            let amountFromURL = urlParams.get('amount');
-    
-            if (amountFromURL) {
-                let numericAmount = Number(amountFromURL) / 100;
-                let formattedAmount = numericAmount.toLocaleString('hr-HR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-    
-                autoNumericInstance.set(formattedAmount);
-                handleInputChange('amount', undefined, formattedAmount);
-    
-                setTimeout(() => {
-                    if (inputRef && inputRef.current) {
-                        inputRef.current.focus();
-                        inputRef.current.blur();
-                    }
-                }, 1000);
-            }
+export default function AmountInput({ handleValueChange, value, visited, errors, handleBlur }) {
+    const onValueChange = (values) => {
+        const { formattedValue, floatValue } = values;
+        if (floatValue !== undefined && (floatValue < 0.01 || floatValue > 999999.99)) {
+            return;
         }
-    
-        return () => {
-            if (autoNumericInstance) {
-                autoNumericInstance.remove();
-            }
-        };
-    }, []);
-    
+        handleValueChange('amount', formattedValue);
+    };
+
     return (
-        <input
-            type="text"
-            ref={inputRef}
-            id="payment_amount"
-            name="amount"
-            value={inputData.amount}
-            className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
-            onChange={handleInputChange}
+        <NumericFormat
+            thousandSeparator="."
+            decimalSeparator=","
+            isNumericString
+            decimalScale={2}
+            fixedDecimalScale
+            value={value}
+            onValueChange={onValueChange}
             onBlur={() => handleBlur('amount')}
+            className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
             placeholder="max 999.999,99"
-            maxLength={8}
+            maxLength={10}
         />
     );
 }
