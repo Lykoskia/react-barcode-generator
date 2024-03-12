@@ -2,57 +2,64 @@ import React, { useEffect, useRef } from 'react';
 import AutoNumeric from 'autonumeric';
 
 export default function AmountInput({ handleInputChange, inputData, visited, errors, handleBlur }) {
-    const inputRef = useRef(null);
-    const autoNumericInstance = useRef(null);
 
+    const inputRef = useRef(null);
+    
     useEffect(() => {
-        if (inputRef.current && !autoNumericInstance.current) {
-            autoNumericInstance.current = new AutoNumeric(inputRef.current, {
+        const currentRef = inputRef.current;
+        let autoNumericInstance;
+
+        if (currentRef) {
+            autoNumericInstance = new AutoNumeric(currentRef, {
                 decimalCharacter: ',',
                 digitGroupSeparator: '.',
                 decimalPlaces: 2,
                 maximumValue: '999999.99',
                 minimumValue: '0',
-                modifyValueOnWheel: false,
-                unformatOnSubmit: true
+                modifyValueOnWheel: false
             });
-            
-            const changeHandler = () => {
-                const numericString = autoNumericInstance.current.getNumericString();
-                if (inputData.amount !== numericString) {
-                    handleInputChange('amount', numericString);
-                }
-            };
 
-            inputRef.current.addEventListener('autoNumeric:rawValueModified', changeHandler);
-
-            return () => {
-                inputRef.current.removeEventListener('autoNumeric:rawValueModified', changeHandler);
-                if (autoNumericInstance.current) {
-                    autoNumericInstance.current.remove();
-                }
-            };
-        }
-    }, []);
-
-    useEffect(() => {
-        if (autoNumericInstance.current) {
-            const numericValue = autoNumericInstance.current.getNumericString();
-            if (inputData.amount.toString() !== numericValue) {
-                autoNumericInstance.current.set(inputData.amount || '0');
+            const urlParams = new URLSearchParams(window.location.search);
+            let amountFromURL = urlParams.get('amount');
+    
+            if (amountFromURL) {
+                let numericAmount = Number(amountFromURL) / 100;
+                let formattedAmount = numericAmount.toLocaleString('hr-HR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+    
+                autoNumericInstance.set(formattedAmount);
+                handleInputChange('inputData', 'amount', formattedAmount);
+    
+                setTimeout(() => {
+                    if (inputRef && inputRef.current) {
+                        inputRef.current.focus();
+                        inputRef.current.blur();
+                    }
+                }, 1000);
             }
         }
-    }, [inputData.amount]);
-
+    
+        return () => {
+            if (autoNumericInstance) {
+                autoNumericInstance.remove();
+            }
+        };
+    }, []);
+    
     return (
         <input
+            type="text"
             ref={inputRef}
             id="payment_amount"
             name="amount"
+            value={inputData.amount}
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
+            onChange={handleInputChange}
             onBlur={() => handleBlur('amount')}
             placeholder="max 999.999,99"
-            maxLength={10}
+            maxLength={8}
         />
     );
 }
