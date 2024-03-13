@@ -34,7 +34,7 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
     **************************************************************************************************
     */
 
-    /* EMPTY BANK CODE VLUE IF NAME FIELD DOESN'T MATCH A VALID CODE */
+    /* EMPTY BANK CODE VALUE IF NAME FIELD DOESN'T MATCH A VALID CODE */
 
     useEffect(() => {
         if (selectedBank) {
@@ -51,14 +51,14 @@ export default function IBANCalculator({ handleIBANChange, generateModalIsOpen, 
         setAccountNumber('');
     };
 
-    /* TYPING THE BANK NAME */
+    /* BANK NAME INPUT */
 
     const handleBankNameChange = (e) => {
         const input = e.target.value;
         setSelectedBank(input);
     };
 
-    /* GENERATE IBAN BUTTON CLICK */
+    /* GENERATE IBAN BUTTON */
 
     const handleGenerateIBAN = () => {
         const generatedIBAN = generateIBAN(bankCode, accountNumber);
