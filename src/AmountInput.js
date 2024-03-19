@@ -12,7 +12,7 @@ export default function AmountInput({ value, handleValueChange, visited, errors,
         <NumericFormat
             thousandSeparator="."
             decimalSeparator=","
-            isNumericString
+            valueIsNumericString={true}
             fixedDecimalScale={true}
             decimalScale={2}
             value={value} 
