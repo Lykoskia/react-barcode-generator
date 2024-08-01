@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { formatNumeral, registerCursorTracker } from 'cleave-zen';
 
 export default function AmountInput({ value, handleValueChange, visited, errors, handleBlur }) {
@@ -14,16 +14,24 @@ export default function AmountInput({ value, handleValueChange, visited, errors,
     }, []);
 
     const handleInputChange = (e) => {
-        const rawValue = e.target.value.replace(/\./g, '').replace(',', '.'); // Convert to a numerical format
+        let rawValue = e.target.value.replace(/\./g, '').replace(',', '.');
+
+        if (parseFloat(rawValue) > 999999.99) {
+            rawValue = '999999.99';
+        }
+
         const newFormattedValue = formatNumeral(rawValue, { delimiter: '.', numeralDecimalMark: ',', numeralDecimalScale: 2 });
         setFormattedValue(newFormattedValue);
-        handleValueChange(rawValue); // Store the raw numerical value
+        handleValueChange(rawValue);
     };
 
     const handleAmountBlur = () => {
-        const regex = /^\d{1,3}(\.\d{3})*,\d{2}$/;
-        if (!regex.test(formattedValue)) {
+        const formattedForCheck = formatNumeral(formattedValue, { delimiter: '', numeralDecimalMark: '.', numeralDecimalScale: 2 });
+        if (parseFloat(formattedForCheck) > 999999.99) {
             handleValueChange('');
+            setFormattedValue('');
+        } else {
+            handleValueChange(formattedForCheck);
         }
         handleBlur('amount');
     };
