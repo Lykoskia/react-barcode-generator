@@ -720,10 +720,10 @@ export default function App() {
 
     /* REACT NUMBER FORMAT FUNCTION FOR HANDLING CHANGES TO THE AMOUNT FIELD IN THE PARENT COMPONENT */
     
-    const handleAmountChange = (formattedValue) => {
+    const handleAmountChange = (numericValue) => {
         setInputData(prevInputData => ({
             ...prevInputData,
-            amount: formattedValue
+            amount: numericValue
         }));
     };
 
@@ -1044,6 +1044,15 @@ export default function App() {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
+        const amountParam = searchParams.get('amount');
+
+        if (amountParam) {
+            const parsedAmount = parseFloat(amountParam);
+            if (!isNaN(parsedAmount)) {
+                setInputData(prev => ({ ...prev, amount: parsedAmount.toFixed(2) }));
+            }
+        }
+        
         let urlInputData = { ...inputData };
     
         for (let [key, value] of searchParams) {
