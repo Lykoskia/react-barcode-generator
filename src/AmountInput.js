@@ -14,11 +14,6 @@ export default function AmountInput({ value, handleValueChange, visited, errors,
         setFormattedValue(formatCroatianNumber(value));
     }, [value]);
 
-    useEffect(() => {
-        // Ensure cursor is handled properly with formatted values
-        return registerCursorTracker({ input: inputRef.current, delimiter: '.' });
-    }, []);
-
     const handleInputChange = (e) => {
         let inputValue = e.target.value;
 
