@@ -1,35 +1,39 @@
-import React from 'react';
-import { NumericFormat } from 'react-number-format';
+import React, { useState, useRef, useEffect } from 'react';
+import { formatNumeral, registerCursorTracker } from 'cleave-zen';
 
 export default function AmountInput({ value, handleValueChange, visited, errors, handleBlur }) {
-    
-    const onValueChange = (values) => {
-        const { formattedValue, value } = values;
-        handleValueChange(value);
+    const inputRef = useRef(null);
+    const [formattedValue, setFormattedValue] = useState('');
+
+    useEffect(() => {
+        setFormattedValue(formatNumeral(value, { delimiter: '.', numeralDecimalMark: ',', numeralDecimalScale: 2 }));
+    }, [value]);
+
+    useEffect(() => {
+        return registerCursorTracker({ input: inputRef.current, delimiter: '.' });
+    }, []);
+
+    const handleInputChange = (e) => {
+        const rawValue = e.target.value.replace(/\./g, '').replace(',', '.'); // Convert to a numerical format
+        const newFormattedValue = formatNumeral(rawValue, { delimiter: '.', numeralDecimalMark: ',', numeralDecimalScale: 2 });
+        setFormattedValue(newFormattedValue);
+        handleValueChange(rawValue); // Store the raw numerical value
     };
 
     const handleAmountBlur = () => {
         const regex = /^\d{1,3}(\.\d{3})*,\d{2}$/;
-        if (!regex.test(value)) {
+        if (!regex.test(formattedValue)) {
             handleValueChange('');
         }
         handleBlur('amount');
     };
 
     return (
-        <NumericFormat
-            thousandSeparator="."
-            decimalSeparator=","
-            valueIsNumericString={true}
-            fixedDecimalScale={true}
-            decimalScale={2}
-            value={value}
-            onValueChange={(values) => {
-                const { formattedValue } = values;
-                if (/^\d{1,3}(\.\d{3})?,\d{2}$/.test(formattedValue) || formattedValue === "") {
-                    handleValueChange(formattedValue);
-                }
-            }}
+        <input
+            ref={inputRef}
+            type="text"
+            value={formattedValue}
+            onChange={handleInputChange}
             onBlur={handleAmountBlur}
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
             placeholder="max 999.999,99"
