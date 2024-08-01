@@ -1,38 +1,51 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { formatNumeral, registerCursorTracker } from 'cleave-zen';
 
 export default function AmountInput({ value, handleValueChange, visited, errors, handleBlur }) {
     const inputRef = useRef(null);
     const [formattedValue, setFormattedValue] = useState('');
 
+    // Function to parse Croatian formatted numbers to float
+    const parseCroatianNumber = (input) => parseFloat(input.replace(/\./g, '').replace(',', '.'));
+
+    // Function to format number to Croatian standard
+    const formatCroatianNumber = (number) => isNaN(number) ? number : number.toLocaleString('hr-HR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
     useEffect(() => {
-        setFormattedValue(formatNumeral(value, { delimiter: '.', numeralDecimalMark: ',', numeralDecimalScale: 2 }));
+        setFormattedValue(formatCroatianNumber(value));
     }, [value]);
 
     useEffect(() => {
+        // Ensure cursor is handled properly with formatted values
         return registerCursorTracker({ input: inputRef.current, delimiter: '.' });
     }, []);
 
     const handleInputChange = (e) => {
-        let rawValue = e.target.value.replace(/\./g, '').replace(',', '.');
+        let inputValue = e.target.value;
 
-        if (parseFloat(rawValue) > 999999.99) {
-            rawValue = '999999.99';
+        // Parse the input value into a number
+        let numericValue = parseCroatianNumber(inputValue);
+
+        // Cap the numeric value to 999999.99 if it exceeds this limit
+        if (numericValue > 999999.99) {
+            numericValue = 999999.99;
         }
 
-        const newFormattedValue = formatNumeral(rawValue, { delimiter: '.', numeralDecimalMark: ',', numeralDecimalScale: 2 });
-        setFormattedValue(newFormattedValue);
-        handleValueChange(rawValue);
+        // Set the state with the raw numeric value and the formatted display value
+        setFormattedValue(formatCroatianNumber(numericValue));
+        handleValueChange(numericValue);
     };
 
     const handleAmountBlur = () => {
-        const formattedForCheck = formatNumeral(formattedValue, { delimiter: '', numeralDecimalMark: '.', numeralDecimalScale: 2 });
-        if (parseFloat(formattedForCheck) > 999999.99) {
-            handleValueChange('');
+        // Ensure value is not above 999999.99 after user leaves the field
+        let numericValue = parseCroatianNumber(formattedValue);
+
+        if (numericValue > 999999.99) {
+            numericValue = '';
             setFormattedValue('');
         } else {
-            handleValueChange(formattedForCheck);
+            setFormattedValue(formatCroatianNumber(numericValue));
         }
+        handleValueChange(numericValue);
         handleBlur('amount');
     };
 
