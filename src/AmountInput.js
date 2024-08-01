@@ -18,7 +18,7 @@ export default function AmountInput({ value, handleValueChange, visited, errors,
             value={value}
             onValueChange={(values) => {
                 const { formattedValue } = values;
-                if (/^\d{0,3}(\.\d{3})*,\d{2}$/.test(formattedValue) || formattedValue === "") {
+                if (/^\d{1,3}(\.\d{3})?,\d{2}$/.test(formattedValue) || formattedValue === "") {
                     handleValueChange(formattedValue);
                 }
             }}
