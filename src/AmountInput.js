@@ -16,11 +16,16 @@ export default function AmountInput({ value, handleValueChange, visited, errors,
             fixedDecimalScale={true}
             decimalScale={2}
             value={value}
-            onValueChange={onValueChange}
+            onValueChange={(values) => {
+                const { formattedValue } = values;
+                if (/^\d{0,3}(\.\d{3})*,\d{2}$/.test(formattedValue) || formattedValue === "") {
+                    handleValueChange(formattedValue);
+                }
+            }}
             onBlur={() => handleBlur('amount')}
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
             placeholder="max 999.999,99"
-            maxLength={11}
+            maxLength={10}
         />
     );
 }
