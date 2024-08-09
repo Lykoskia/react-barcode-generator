@@ -271,6 +271,10 @@ export default function App() {
     const location = useLocation();
     
     const runEffect = () => {
+      console.log("Effect running");
+      console.log("cookies.formData:", cookies.formData);
+      console.log("cookies.cookieConsent:", cookies.cookieConsent);
+      console.log("location.search:", location.search);
       const searchParams = new URLSearchParams(location.search);
       let hasSenderUrlParams = false;
       const senderParams = ["sender.name", "sender.street", "sender.postcode", "sender.city"];
