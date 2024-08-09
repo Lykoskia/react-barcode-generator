@@ -1,59 +1,40 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
+import AutoNumeric from 'autonumeric';
 
-export default function AmountInput({ value, handleValueChange, visited, errors, handleBlur }) {
+export default function AmountInput({ visited, errors, value, handleValueChange, handleBlur }) {
     const inputRef = useRef(null);
-    const [formattedValue, setFormattedValue] = useState('');
-
-    // Function to parse Croatian formatted numbers to float
-    const parseCroatianNumber = (input) => parseFloat(input.replace(/\./g, '').replace(',', '.'));
-
-    // Function to format number to Croatian standard
-    const formatCroatianNumber = (number) => isNaN(number) ? number : number.toLocaleString('hr-HR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     useEffect(() => {
-        setFormattedValue(formatCroatianNumber(value));
-    }, [value]);
+        const autoNumericInstance = new AutoNumeric(inputRef.current, {
+            currencySymbol: '',
+            decimalCharacter: ',',
+            digitGroupSeparator: '.',
+            decimalPlaces: 2,
+            maximumValue: '999999.99',
+            minimumValue: '0'
+        });
 
-    const handleInputChange = (e) => {
-        let inputValue = e.target.value;
+        return () => {
+            autoNumericInstance.remove();
+        };
+    }, []);
 
-        // Parse the input value into a number
-        let numericValue = parseCroatianNumber(inputValue);
-
-        // Cap the numeric value to 999999.99 if it exceeds this limit
-        if (numericValue > 999999.99) {
-            numericValue = 999999.99;
-        }
-
-        // Set the state with the raw numeric value and the formatted display value
-        setFormattedValue(formatCroatianNumber(numericValue));
-        handleValueChange(numericValue);
-    };
-
-    const handleAmountBlur = () => {
-        // Ensure value is not above 999999.99 after user leaves the field
-        let numericValue = parseCroatianNumber(formattedValue);
-
-        if (numericValue > 999999.99) {
-            numericValue = '';
-            setFormattedValue('');
-        } else {
-            setFormattedValue(formatCroatianNumber(numericValue));
-        }
-        handleValueChange(numericValue);
-        handleBlur('amount');
+    const handleChange = (event) => {
+        const newValue = event.target.value;
+        handleValueChange(newValue);
     };
 
     return (
         <input
             ref={inputRef}
             type="text"
-            value={formattedValue}
-            onChange={handleInputChange}
-            onBlur={handleAmountBlur}
+            id="payment_amount"
+            name="amount"
             className={visited['amount'] ? (errors.amount === '' ? 'valid' : 'invalid') : 'unvisited'}
-            placeholder="max 999.999,99"
-            maxLength={10}
+            value={value}
+            onChange={handleChange}
+            onBlur={() => handleBlur('amount')}
+            placeholder="npr. 123,45"
         />
     );
-}
+};
