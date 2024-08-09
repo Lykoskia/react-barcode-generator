@@ -270,53 +270,54 @@ export default function App() {
 
     const location = useLocation();
     
-    useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        let hasSenderUrlParams = false;
-    
-        const senderParams = ["sender.name", "sender.street", "sender.postcode", "sender.city"];
-    
-        for (let param of senderParams) {
-            if (searchParams.has(param)) {
-                hasSenderUrlParams = true;
-                break;
-            }
+    const runEffect = () => {
+      const searchParams = new URLSearchParams(location.search);
+      let hasSenderUrlParams = false;
+      const senderParams = ["sender.name", "sender.street", "sender.postcode", "sender.city"];
+      for (let param of senderParams) {
+        if (searchParams.has(param)) {
+          hasSenderUrlParams = true;
+          break;
         }
-    
-        if (!hasSenderUrlParams) {
-            const boolCookieConsent = (cookies.cookieConsent === 'true');
-            if (boolCookieConsent && cookies.formData) {
-                try {
-                    const decodedFormData = decodeURIComponent(cookies.formData);
-                    const parsedFormData = JSON.parse(decodedFormData);
-                    if (parsedFormData && parsedFormData.sender) {
-                        setInputData(prevInputData => {
-                            const isNewData = JSON.stringify(prevInputData.sender) !== JSON.stringify(parsedFormData.sender);
-                            if (isNewData) {
-                                return {
-                                    ...prevInputData,
-                                    sender: {
-                                        name: parsedFormData.sender.name,
-                                        street: parsedFormData.sender.street,
-                                        postcode: parsedFormData.sender.postcode,
-                                        city: parsedFormData.sender.city,
-                                        place: parsedFormData.sender.place
-                                    }
-                                };
-                            }
-                            return prevInputData;
-                        });
-                        setImportedSender(true);
+      }
+      if (!hasSenderUrlParams) {
+        const boolCookieConsent = (cookies.cookieConsent === 'true');
+        if (boolCookieConsent && cookies.formData) {
+          try {
+            const decodedFormData = decodeURIComponent(cookies.formData);
+            const parsedFormData = JSON.parse(decodedFormData);
+            if (parsedFormData && parsedFormData.sender) {
+              setInputData(prevInputData => {
+                const isNewData = JSON.stringify(prevInputData.sender) !== JSON.stringify(parsedFormData.sender);
+                if (isNewData) {
+                  return {
+                    ...prevInputData,
+                    sender: {
+                      name: parsedFormData.sender.name,
+                      street: parsedFormData.sender.street,
+                      postcode: parsedFormData.sender.postcode,
+                      city: parsedFormData.sender.city,
+                      place: parsedFormData.sender.place
                     }
-                } catch (error) {
-                    console.error('Error parsing formData:', error);
+                  };
                 }
-            } else if (cookies.cookieConsent === 'false') {
-                removeCookie('formData');
-            } else {
-                setShowCookieConsent(true);
+                return prevInputData;
+              });
+              setImportedSender(true);
             }
+          } catch (error) {
+            console.error('Error parsing formData:', error);
+          }
         }
+      }
+    };
+
+    useEffect(() => {
+      runEffect(); // making sure the sender info import from cookies runs on mount
+    }, []);
+    
+    useEffect(() => {
+      runEffect(); // also running the effect when the actual dependencies change
     }, [cookies.formData, cookies.cookieConsent, location.search]);
 
     const handleAcceptCookies = () => {
